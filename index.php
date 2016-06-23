@@ -26,11 +26,39 @@
     <?php include 'navbar.php'; ?>
 
     <div class="col-lg-8">
-        <div id="theater-map"></div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Theater seats</div>
+            <div class="panel-body">
+                <div class="col-lg-12">
+                    <div id="theater-map"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-4">
         <div id="booking-panel">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Booking details</h3>
+                </div>
 
+                <div class="panel-body">
+                    <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Clear</button>
+                    <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Book</button>
+                    Selected seats : <span id="selected-seats">0</span><br>
+                    Total seats :
+                        <span id="total-seats">
+                            <?php echo height*base; ?>
+                        </span><br>
+                    Taken seats : <span id="taken-seats">
+                            0
+                        </span><br>
+                    Free seats : <span id="free-seats">
+                            <?php echo height*base; ?>
+                        </span><br>
+                </div>
+            </div>
         </div>
     </div>
 

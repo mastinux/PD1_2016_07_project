@@ -4,13 +4,17 @@ tr td {overflow: hidden; text-align: center}
 */
 
 body {
-    background-color: #666666;
+    background-color: #999999;
 }
-
+/*
 table {
-    border: 1px solid;
+    border-collapse:collapse;
 }
 
+table, th, td {
+    border: 1px solid black;
+}
+*/
 td.taken {background-color: #cc0000;}
 td.free {background-color: #33cc33;}
 td.selected {background-color: #ffff66;}
