@@ -1,0 +1,17 @@
+/*table tr td {border: 1px solid black;}
+table {table-layout: fixed; width: 80%; height: 80%}
+tr td {overflow: hidden; text-align: center}
+*/
+
+body {
+    background-color: #666666;
+}
+
+table {
+    border: 1px solid;
+}
+
+td.taken {background-color: #cc0000;}
+td.free {background-color: #33cc33;}
+td.selected {background-color: #ffff66;}
+td.booked {background-color: #ff9900;}
