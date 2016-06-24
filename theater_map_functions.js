@@ -94,5 +94,5 @@ function clearBookedSeats() {
 
 function bookSeats() {
     sessionStorage.setItem("seatsObject", seatObjects);
-    window.location.replace("login.php");
+    window.location.replace("auth_login.php");
 }

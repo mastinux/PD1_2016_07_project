@@ -1,6 +1,6 @@
 <?php
     include 'global_settings.php';
-    if (isset($_SESSION['231826_user'])) {
+    if (isset($_SESSION['231826_user'])){
         include 'auth_sessions.php';
     }
     else{

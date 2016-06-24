@@ -3,6 +3,7 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -12,31 +13,29 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
             <ul class="nav navbar-nav navbar-right">
                 <?php
-                    if (isset($_SESSION['231826_user'])) {
-                        $username = $_SESSION['231826_user'];
-                        echo "
+                if (isset($_SESSION['231826_user'])) {
+                    $username = $_SESSION['231826_user'];
+                    echo "
                               <li>
                                     <p class=\"navbar-text\">Signed in as ".$username."</p>                              
                               </li>
-                              <li>
                                 <a href=\"auth_logout.php\">
                                     <button type=\"button\" class=\"btn btn-default navbar-btn\">
                                         <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
                                     </button>
-                                </a>
-                              </li>";
-                    }
-                    else{
-                        echo "<li>
-                                <a href=\"auth_login.php\">
-                                    <button type=\"button\" class=\"btn btn-default navbar-btn\">
-                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
-                                    </button>
-                                </a>
-                              </li>";
-                    }
+                                </a>";
+                }
+                else{
+                    echo "  <a href=\"auth_login.php\">
+                                <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                    <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
+                                </button>
+                            </a>";
+                }
                 ?>
             </ul>
         </div><!-- /.navbar-collapse -->
