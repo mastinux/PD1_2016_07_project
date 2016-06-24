@@ -37,16 +37,11 @@ function register(){
         valid_password = true;
     }
 
-    /*
-    if ( valid_email && valid_password){
-        var form = document.getElementById("register-form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "register.php");
-        form.submit()
+    if ( !(valid_email && valid_password) ) {
+        return false;
     }
-    */
 }
 
 function login() {
-
+    
 }

@@ -1,4 +1,6 @@
-<?php include 'settings.php' ?>
+<?php
+    include 'global_settings.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +21,7 @@
     <![endif]-->
 
     <link href="tb_style.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="login_functions.js"></script>
+    <script type="text/javascript" src="auth_functions.js"></script>
 </head>
 <body>
 
@@ -30,8 +32,13 @@
             Please register or log in to book your seats.
         </div>
 
-        <div id="error-message"></div>
-
+        <?php
+            if (isset($_REQUEST['msg'])) {
+                $msg = $_REQUEST['msg'];
+                echo "<div class=\"alert alert-warning\" role=\"alert\">".$msg."</div>";
+            }
+        ?>
+        
         <div class="col-lg-6">
 
             <div class="panel panel-default">
@@ -39,8 +46,7 @@
                     <h3 class="panel-title">Register</h3>
                 </div>
                     <div class="panel-body">
-
-                        <form id="register-form">
+                        <form id="register-form" method="post" action="auth_register.php" onsubmit="return register();">
                             <div class="input-group">
                                 <span class="input-group-addon">email</span>
                                 <input id="new-email" name="email" type="text" class="form-control" placeholder="email" aria-describedby="basic-addon1">
@@ -57,12 +63,9 @@
                             </div>
                             <br>
                             <div class="input-group">
-                                <button class="btn btn-default" onclick="register()">
-                                    Register
-                                </button>
+                                <button type="submit" class="btn btn-default">Register</button>
                             </div>
                         </form>
-
                     </div>
             </div>
         </div>
@@ -73,21 +76,19 @@
                     <h3 class="panel-title">Log in</h3>
                 </div>
                 <div class="panel-body">
-                    <form>
+                    <form id="login-form" method="post" action="auth_authenticate.php" onsubmit="return login();">
                         <div class="input-group">
                             <span class="input-group-addon" >username</span>
-                            <input name="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
+                            <input id="username" name="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
                         </div>
                         <br>
                         <div class="input-group">
                             <span class="input-group-addon" >password</span>
-                            <input name="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
+                            <input id="password" name="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
                         </div>
                         <br>
                         <div class="input-group">
-                            <button class="btn btn-default"">
-                                Log in
-                            </button>
+                            <button type="submit" class="btn btn-default"">Log in</button>
                         </div>
                     </form>
                 </div>

@@ -1,4 +1,12 @@
-<?php include 'settings.php' ?>
+<?php
+    include 'global_settings.php';
+    if (isset($_SESSION['231826_user'])) {
+        include 'auth_sessions.php';
+    }
+    else{
+        session_start();
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +32,13 @@
 <body>
 
     <?php include 'navbar.php'; ?>
+
+    <?php
+        if (isset($_REQUEST['msg'])) {
+            $msg = $_REQUEST['msg'];
+            echo "<div class='col-lg-12'><div  class=\"alert alert-warning\" role=\"alert\">".$msg."</div></div>";
+        }
+    ?>
 
     <div class="col-lg-8">
         <div class="panel panel-default">
