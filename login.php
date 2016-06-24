@@ -19,11 +19,83 @@
     <![endif]-->
 
     <link href="tb_style.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="theater_map_functions.js"></script>
+    <script type="text/javascript" src="login_functions.js"></script>
 </head>
 <body>
 
-<?php include 'navbar.php'; ?>
+    <?php include 'navbar.php'; ?>
+
+    <div class="col-lg-12">
+        <div id="info-message" class="alert alert-info" role="alert">
+            Please register or log in to book your seats.
+        </div>
+
+        <div id="error-message"></div>
+
+        <div class="col-lg-6">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Register</h3>
+                </div>
+                    <div class="panel-body">
+
+                        <form id="register-form">
+                            <div class="input-group">
+                                <span class="input-group-addon">email</span>
+                                <input id="new-email" name="email" type="text" class="form-control" placeholder="email" aria-describedby="basic-addon1">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">password</span>
+                                <input id="new-password" name="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">repeat password</span>
+                                <input id="new-password-repeated" name="password-repeated" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <button class="btn btn-default" onclick="register()">
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Log in</h3>
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <div class="input-group">
+                            <span class="input-group-addon" >username</span>
+                            <input name="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" >password</span>
+                            <input name="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <button class="btn btn-default"">
+                                Log in
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

@@ -36,28 +36,30 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div id="booking-panel">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Booking details</h3>
-                </div>
 
-                <div class="panel-body">
-                    <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Clear</button>
-                    <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Book</button>
-                    Selected seats : <span id="selected-seats">0</span><br>
-                    Total seats :
-                        <span id="total-seats">
-                            <?php echo height*base; ?>
-                        </span><br>
-                    Taken seats : <span id="taken-seats">
-                            0
-                        </span><br>
-                    Free seats : <span id="free-seats">
-                            <?php echo height*base; ?>
-                        </span><br>
-                </div>
+    <div class="col-lg-4">
+        <div id="booking-panel" class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Booking details</h3>
+            </div>
+
+            <div class="panel-body">
+                <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Clear</button>
+                <button class="btn btn-default pull-right" onclick="bookSeats()">Book</button>
+                Selected seats :
+                    <span id="selected-seats" class="label label-warning">
+                        0
+                    </span><br>
+                Free seats : <span id="free-seats" class="label label-success">
+                        <?php echo height*base; ?>
+                    </span><br>
+                Total seats :
+                    <span id="total-seats" class="label label-primary">
+                        <?php echo height*base; ?>
+                    </span><br>
+                Taken seats : <span id="taken-seats" class="label label-danger">
+                        0
+                    </span><br>
             </div>
         </div>
     </div>
