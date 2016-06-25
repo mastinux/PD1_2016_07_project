@@ -17,25 +17,24 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <?php
-                if (isset($_SESSION['231826_user'])) {
-                    $username = $_SESSION['231826_user'];
-                    echo "
-                              <li>
-                                    <p class=\"navbar-text\">Signed in as ".$username."</p>                              
-                              </li>
-                                <a href=\"auth_logout.php\">
+                    if ( $username = user_logged_in() ) {
+                        echo "
+                                  <li>
+                                        <p class=\"navbar-text\">Signed in as ".$username."</p>                              
+                                  </li>
+                                    <a href=\"auth_logout.php\">
+                                        <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                            <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
+                                        </button>
+                                    </a>";
+                    }
+                    else{
+                        echo "  <a href=\"auth_login.php\">
                                     <button type=\"button\" class=\"btn btn-default navbar-btn\">
-                                        <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
+                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
                                     </button>
                                 </a>";
-                }
-                else{
-                    echo "  <a href=\"auth_login.php\">
-                                <button type=\"button\" class=\"btn btn-default navbar-btn\">
-                                    <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
-                                </button>
-                            </a>";
-                }
+                    }
                 ?>
             </ul>
         </div><!-- /.navbar-collapse -->

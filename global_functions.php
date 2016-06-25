@@ -1,5 +1,4 @@
 <?php
-
     include 'global_settings.php';
 
     function connect_to_database(){
@@ -23,8 +22,8 @@
     }
 
     function user_logged_in() {
-        if (isset($_SESSION['user'])) {
-            return $_SESSION['user'];
+        if (isset($_SESSION['231826_user'])) {
+            return $_SESSION['231826_user'];
         } else {
             return false;
         }

@@ -1,4 +1,5 @@
 <?php
+    include 'global_settings.php';
     include 'global_functions.php';
 
     switch($_SERVER['REQUEST_METHOD']) {

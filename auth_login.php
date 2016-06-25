@@ -1,5 +1,5 @@
 <?php
-    include 'global_settings.php';
+    include 'global_functions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
