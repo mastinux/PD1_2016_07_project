@@ -1,11 +1,62 @@
 <?php
     include 'global_settings.php';
 
+    function print_success_message($message){
+        return "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                    <span aria-hidden=\"true\">&times;</span>
+                </button>".$message."
+              </div>";
+    }
+
+    function print_info_message($message){
+        return "<div class=\"alert alert-info alert-dismissible\" role=\"alert\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                    <span aria-hidden=\"true\">&times;</span>
+                </button>".$message."
+              </div>";
+    }
+
+    function print_warning_message($message){
+        return "<div class=\"alert alert-warning alert-dismissible\" role=\"alert\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                    <span aria-hidden=\"true\">&times;</span>
+                </button>".$message."
+              </div>";
+    }
+
+    function print_danger_message($message){
+        return "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                    <span aria-hidden=\"true\">&times;</span>
+                </button>".$message."
+              </div>";
+    }
+
+    function manage_messages(){
+        if (isset($_REQUEST['smsg'])){
+            $smsg = $_REQUEST['smsg'];
+            echo "<div class='col-lg-12'>", print_success_message($smsg),"</div>";
+        }
+        if (isset($_REQUEST['imsg'])){
+            $imsg = $_REQUEST['imsg'];
+            echo "<div class='col-lg-12'>", print_info_message($imsg),"</div>";
+        }
+        if (isset($_REQUEST['wmsg'])){
+            $wmsg = $_REQUEST['wmsg'];
+            echo "<div class='col-lg-12'>", print_warning_message($wmsg),"</div>";
+        }
+        if (isset($_REQUEST['emsg'])){
+            $emsg = $_REQUEST['emsg'];
+            echo "<div class='col-lg-12'>", print_danger_message($emsg),"</div>";
+        }
+    }
+
     function connect_to_database(){
         $connection = mysqli_connect(db_host, db_user, db_password, db_database);
 
         if ( mysqli_connect_error() ){
-            redirect_with_message("", "Error during connection to DB");
+            redirect_with_message("", "e", "Error during connection to DB");
         }
 
         return $connection;
@@ -17,7 +68,7 @@
         $sql_statement = "select * from theater_booked_seat where username != '$username'";
 
         if ( !($result = mysqli_query($connection, $sql_statement)) ){
-            redirect_with_message("", mysqli_error($connection));
+            redirect_with_message("", "e", mysqli_error($connection));
         }
 
         $connection->close();
@@ -32,7 +83,7 @@
         $sql_statement = "select * from theater_booked_seat where username = '$username'";
 
         if ( !($result = mysqli_query($connection, $sql_statement)) ){
-            redirect_with_message("", mysqli_error($connection));
+            redirect_with_message("", "e", mysqli_error($connection));
         }
 
         $connection->close();
@@ -53,14 +104,27 @@
     function store_booked_seats($username, $seats){
         $connection = connect_to_database();
 
-        foreach ($seats as $s) {
-            $row = $s['row'];
-            $col = $s['col'];
-            $sql_statement = "insert into theater_booked_seat(cln, rwn, username) values('$col','$row','$username')";
+        try {
+            mysqli_autocommit($connection,false);
 
-            if (!mysqli_query($connection, $sql_statement)) {
-                redirect_with_message("", mysqli_error($connection));
+            foreach ($seats as $s) {
+                $row = $s['row'];
+                $col = $s['col'];
+                $sql_statement = "insert into theater_booked_seat(cln, rwn, username) values('$col','$row','$username')";
+
+                if (!mysqli_query($connection, $sql_statement)) {
+                    redirect_with_message("index.php", "w", "Selected seats are already taken.");
+                    //throw new Exception("query: '", $sql_statement, "' failed");
+                }
             }
+            if (!mysqli_commit($connection)) {
+                throw Exception("Commit fails");
+            }
+
+        } catch (Exception $e) {
+            mysqli_rollback($connection);
+            redirect_with_message("index.php", "e", $e->getMessage());
+            //echo "Rollback ".$e->getMessage();
         }
 
         $connection->close();
@@ -71,16 +135,18 @@
             $selected_seats = json_decode($_COOKIE['selected'], true);
             store_booked_seats($username, $selected_seats);
             setcookie("selected", "", time()-60*60);
-            redirect_with_message("index.php", "Selected seats have been booked.");
+            //redirect_with_message("index.php", "s", "Selected seats have been booked.");
         }
     }
 
-    function redirect_with_message($page = "/", $message = ""){
+    function redirect_with_message($page, $message_type, $message){
         header("HTTP/1.1 307 temporary redirect");
         $head = "Location: ".$page;
-        if (!empty($message)){
-            $head = $head."?msg=".urlencode($message);
+
+        if (!((empty($message_type) || empty($message)))){
+            $head = $head."?".$message_type."msg=".urlencode($message);
         }
+
         header($head);
         exit;
     }

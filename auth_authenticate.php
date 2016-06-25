@@ -1,11 +1,10 @@
 <?php
 
-    include 'global_settings.php';
     include 'global_functions.php';
 
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET':
-            redirect_with_message("auth_login.php", "Login action must be with post method.");
+            redirect_with_message("auth_login.php", "e", "Login action must be with post method.");
         case 'POST':
             $username = $_POST['username'];
             $password = $_POST['password'];
@@ -14,7 +13,7 @@
 
     if ( !(($username != "") and ($password != "")) ) {
         // invalid request
-        redirect_with_message("auth_login.php", "Email or password not set in post method.");
+        redirect_with_message("auth_login.php", "e", "Email or password not inserted.");
     }
     else{
         // valid request
@@ -24,10 +23,10 @@
         $username = mysqli_real_escape_string($connection, $username);
         $password = mysqli_real_escape_string($connection, $password);
 
-        $sql_statement = "select * from theater_user where username = '$username' and pw = md5('$password')";
+        $sql_statement = "select * from theater_user where email = '$username' and pw = md5('$password')";
 
         if ( !($result = mysqli_query($connection, $sql_statement)) ){
-            redirect_with_message("", mysqli_error($connection));
+            redirect_with_message("", "e", mysqli_error($connection));
         }
         $connection->close();
 
@@ -36,11 +35,11 @@
             $_SESSION['231826_user'] = $username;
             $_SESSION['time'] = time();
             check_and_store_booked_seats($username);
-            redirect_with_message("index.php", "Logged in.");
+            redirect_with_message("index.php", "s", "Logged in.");
         }
         else{
             destroy_user_session();
-            redirect_with_message("auth_login.php","Invalid username or password inserted");
+            redirect_with_message("auth_login.php", "e", "Invalid username or password inserted");
         }
     }
 ?>

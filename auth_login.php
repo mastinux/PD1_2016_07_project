@@ -33,25 +33,17 @@
 
     <?php include 'navbar.php'; ?>
 
-    <div class="col-lg-12">
-        <div id="info-message" class="alert alert-info" role="alert">
-            Please register or log in to book your seats.
-        </div>
+    <?php echo "<div class='col-lg-12'>", print_info_message("Please register or log in to book your seats."),"</div>"; ?>
 
-        <?php
-            if (isset($_REQUEST['msg'])) {
-                $msg = $_REQUEST['msg'];
-                echo "<div class=\"alert alert-warning\" role=\"alert\">" . $msg . "</div>";
-            }
-        ?>
-        
-        <div class="col-lg-6">
+    <?php manage_messages(); ?>
+
+    <div class="col-lg-6">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Register</h3>
                 </div>
-                    <div class="panel-body">
+                <div class="panel-body">
                         <form id="register-form" method="post" action="auth_register.php" onsubmit="return register();">
                             <div class="input-group">
                                 <span class="input-group-addon">email</span>
@@ -72,7 +64,7 @@
                                 <button type="submit" class="btn btn-default">Register</button>
                             </div>
                         </form>
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -100,9 +92,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

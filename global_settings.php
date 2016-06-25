@@ -1,7 +1,7 @@
 <?php
     // theater
-    define("base", 3);
-    define("height", 3);
+    define("base", 5);
+    define("height", 5);
 
     // database
     define("db_host", "127.0.0.1");

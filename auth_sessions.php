@@ -24,8 +24,9 @@
         }
         session_destroy();  // destroy session
         // redirect client to login page
-        header('HTTP/1.1 307 temporary redirect');
-        header('Location: auth_login.php');
+        //header('HTTP/1.1 307 temporary redirect');
+        //header('Location: auth_login.php');
+        redirect_with_message("auth_login.php", "w", "Session time out.");
         exit; // IMPORTANT to avoid further output from the script
     } else {
         $_SESSION['time']=time(); /* update time */

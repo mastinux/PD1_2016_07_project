@@ -32,12 +32,7 @@
 
     <?php include 'navbar.php'; ?>
     
-    <?php
-        if (isset($_REQUEST['msg'])) {
-            $msg = $_REQUEST['msg'];
-            echo "<div class='col-lg-12'><div  class=\"alert alert-warning\" role=\"alert\">".$msg."</div></div>";
-        }
-    ?>
+    <?php manage_messages(); ?>
 
     <div class="col-lg-8">
         <div class="panel panel-default">
@@ -59,17 +54,23 @@
 
             <div class="panel-body">
                 Selected seats :
-                    <span id="selected-seats" class="label" style="background:#ffff66;">
+                    <span id="selected-seats" class="label selected">
                         0
                     </span><br>
-                Free seats : <span id="free-seats" class="label label-success">
+                Free seats :
+                    <span id="free-seats" class="label free">
                         <?php echo height*base; ?>
                     </span><br>
                 Total seats :
                     <span id="total-seats" class="label label-primary">
                         <?php echo height*base; ?>
                     </span><br>
-                Taken seats : <span id="taken-seats" class="label label-danger">
+                Booked seats :
+                    <span id="booked-seats" class="label booked">
+                        0
+                    </span><br>
+                Taken seats :
+                    <span id="taken-seats" class="label taken">
                         0
                     </span><br>
                 <br>
@@ -95,8 +96,7 @@
         var non_user_seats = <?php echo format_as_json(get_non_user_taken_seat($username)); ?>;
         setTakenSeats(non_user_seats);
         var user_seats = <?php echo format_as_json(get_user_taken_seat($username)); ?>;
-        setUserTakenSeats(user_seats);
-        
+        setBookedSeats(user_seats);
         
     </script>
     <noscript>

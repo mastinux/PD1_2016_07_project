@@ -1,21 +1,8 @@
-/*table tr td {border: 1px solid black;}
-table {table-layout: fixed; width: 80%; height: 80%}
-tr td {overflow: hidden; text-align: center}
-*/
-
 body {
     background-color: #999999;
 }
-/*
-table {
-    border-collapse:collapse;
-}
 
-table, th, td {
-    border: 1px solid black;
-}
-*/
-td.taken {background-color: #cc0000;}
-td.free {background-color: #33cc33;}
-td.selected {background-color: #ffff66;}
-td.booked {background-color: #ff9900;}
+span.taken {background-color: #cc0000;}
+span.free {background-color: #33cc33;}
+span.selected {background-color: #ffff66;}
+span.booked {background-color: #ff9900;}
