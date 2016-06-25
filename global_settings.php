@@ -1,7 +1,7 @@
 <?php
     // theater
-    define("base", 5);
-    define("height", 10);
+    define("base", 3);
+    define("height", 3);
 
     // database
     define("db_host", "127.0.0.1");
@@ -10,6 +10,6 @@
     define("db_database", "theater_db");
 
     // session
-    define("session_timeout", 60); //seconds
+    define("session_timeout", 2*60); //seconds
 ?>
 

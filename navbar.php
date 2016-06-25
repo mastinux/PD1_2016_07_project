@@ -17,10 +17,10 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <?php
-                    if ( $username = user_logged_in() ) {
+                    if ( $username ) {
                         echo "
                                   <li>
-                                        <p class=\"navbar-text\">Signed in as ".$username."</p>                              
+                                        <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
                                   </li>
                                     <a href=\"auth_logout.php\">
                                         <button type=\"button\" class=\"btn btn-default navbar-btn\">

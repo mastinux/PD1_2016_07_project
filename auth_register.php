@@ -23,17 +23,18 @@
             if ( strcmp($password, $password_repeated) == 0){
                 // valid email and password
                 $connection = connect_to_database();
-
+                
                 $sql_statement = "insert into theater_user(email, pw, username) values('$email',md5('$password'),'$username')";
-                echo $sql_statement;
+                
                 if ( !mysqli_query($connection, $sql_statement) ){
-                    echo mysqli_error($connection);
+                    redirect_with_message("",mysqli_error($connection));
                 }
                 $connection->close();
 
                 session_start();
                 $_SESSION['231826_user'] = $username;
                 $_SESSION['time'] = time();
+                check_and_store_booked_seats($username);
                 redirect_with_message("index.php", $message="Logged in.");
             }
             else{

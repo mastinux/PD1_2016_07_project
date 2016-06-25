@@ -1,10 +1,9 @@
 <?php
+    
     include 'global_functions.php';
+    session_start();
     if ( $username = user_logged_in() ){
         include 'auth_sessions.php';
-    }
-    else{
-        session_start();
     }
 ?>
 <!DOCTYPE html>
@@ -32,7 +31,7 @@
 <body>
 
     <?php include 'navbar.php'; ?>
-
+    
     <?php
         if (isset($_REQUEST['msg'])) {
             $msg = $_REQUEST['msg'];
@@ -59,10 +58,8 @@
             </div>
 
             <div class="panel-body">
-                <button class="btn btn-default pull-right" onclick="clearBookedSeats()">Clear</button>
-                <button class="btn btn-default pull-right" onclick="bookSeats()">Book</button>
                 Selected seats :
-                    <span id="selected-seats" class="label label-warning">
+                    <span id="selected-seats" class="label" style="background:#ffff66;">
                         0
                     </span><br>
                 Free seats : <span id="free-seats" class="label label-success">
@@ -75,15 +72,32 @@
                 Taken seats : <span id="taken-seats" class="label label-danger">
                         0
                     </span><br>
+                <br>
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" onclick="bookSeats()">Book</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
+
         var base = "<?php print(base) ?>";
         var height = "<?php print(height) ?>";
-
+        
         initTheaterMap(base, height);
+
+        var non_user_seats = <?php echo format_as_json(get_non_user_taken_seat($username)); ?>;
+        setTakenSeats(non_user_seats);
+        var user_seats = <?php echo format_as_json(get_user_taken_seat($username)); ?>;
+        setUserTakenSeats(user_seats);
+        
+        
     </script>
     <noscript>
         Sorry: Your browser does not support or has disabled javascript

@@ -1,5 +1,11 @@
 <?php
+    session_start();
     include 'global_functions.php';
+
+    if ( $username = user_logged_in() ){
+        include 'auth_sessions.php';
+        check_and_store_booked_seats($username);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +41,7 @@
         <?php
             if (isset($_REQUEST['msg'])) {
                 $msg = $_REQUEST['msg'];
-                echo "<div class=\"alert alert-warning\" role=\"alert\">".$msg."</div>";
+                echo "<div class=\"alert alert-warning\" role=\"alert\">" . $msg . "</div>";
             }
         ?>
         

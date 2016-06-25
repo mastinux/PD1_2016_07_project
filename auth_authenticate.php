@@ -35,6 +35,7 @@
             session_start();
             $_SESSION['231826_user'] = $username;
             $_SESSION['time'] = time();
+            check_and_store_booked_seats($username);
             redirect_with_message("index.php", "Logged in.");
         }
         else{
@@ -42,5 +43,4 @@
             redirect_with_message("auth_login.php","Invalid username or password inserted");
         }
     }
-
 ?>
