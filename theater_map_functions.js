@@ -2,10 +2,12 @@ var Seat = function(r, c, s) {
     this.row = r;
     this.col = c;
     this.status = s;
-    console.log("created seat:", this.row, " ", this.col, " ", this.status, "\n");
+    console.log("seat:", this.row, " ", this.col, " ", this.status, "\n");
 };
 
-var selectedObjects;
+var toBookObjects;
+var toCancelObjects;
+
 
 function getCookie(name) {
     var name = name + "=";
@@ -22,8 +24,14 @@ function getCookie(name) {
     return "";
 }
 
-function initTheaterMap(b, h){
-    selectedObjects = Array();
+function deleteCookie(name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function initTheaterMap(cols, rows){
+    toBookObjects = [];
+    toCancelObjects = [];
+
     var div = document.getElementById("theater-map");
 
     var table = document.createElement("table");
@@ -31,9 +39,9 @@ function initTheaterMap(b, h){
     table.setAttribute("class", "table");
     div.appendChild(table);
 
-    for (var i = 0; i < h; i++){
+    for (var i = 0; i < rows; i++){
         var row = table.insertRow(i);
-        for (var j = 0; j < b; j++){
+        for (var j = 0; j < cols; j++){
             var cell = row.insertCell(j);
 
             var span = document.createElement("span");
@@ -54,10 +62,10 @@ function setTakenSeats(seats){
     }
 
     var takenN =  parseInt(document.getElementById("taken-seats").innerHTML);
-    document.getElementById("taken-seats").innerHTML = takenN + seats.length;
+    document.getElementById("taken-seats").innerHTML = (takenN + seats.length).toString();
 
     var freeN =  parseInt(document.getElementById("free-seats").innerHTML);
-    document.getElementById("free-seats").innerHTML = freeN - seats.length;
+    document.getElementById("free-seats").innerHTML = (freeN - seats.length).toString();
 }
 
 function setBookedSeats(seats) {
@@ -68,22 +76,37 @@ function setBookedSeats(seats) {
     }
 
     var bookedN = parseInt(document.getElementById("booked-seats").innerHTML);
-    document.getElementById("booked-seats").innerHTML = bookedN + seats.length;
+    document.getElementById("booked-seats").innerHTML = (bookedN + seats.length).toString();
 
     var freeN =  parseInt(document.getElementById("free-seats").innerHTML);
-    document.getElementById("free-seats").innerHTML = freeN - seats.length;
+    document.getElementById("free-seats").innerHTML = (freeN - seats.length).toString();
 
     var takenN =  parseInt(document.getElementById("taken-seats").innerHTML);
-    document.getElementById("taken-seats").innerHTML = takenN + seats.length;
+    document.getElementById("taken-seats").innerHTML = (takenN + seats.length).toString();
+}
+
+function setToBookSeats(){
+    var c = getCookie("toBook");
+    if (c == "")
+        return;
+    toBookObjects = JSON.parse(getCookie("toBook"));
+    for (var i = 0; i< toBookObjects.length; i++){
+        var id = "seat-"+ toBookObjects[i]['row'] + "-" + toBookObjects[i]['col'];
+        var seat = document.getElementById(id);
+        seat.setAttribute("class", seat.getAttribute("class").replace("free", "selected"));
+    }
+
+    var selectedN = parseInt(document.getElementById("selected-seats").innerHTML);
+    document.getElementById("selected-seats").innerHTML = (selectedN + toBookObjects.length).toString();
+
+    var freeN = parseInt(document.getElementById("free-seats").innerHTML);
+    document.getElementById("free-seats").innerHTML = (freeN - toBookObjects.length).toString();
 }
 
 function selectSeat(seat) {
     var status = seat.getAttribute("class");
 
-    console.log(status);
-    console.log(status.indexOf("booked"));
-    console.log(status.indexOf("taken"));
-    if ( (status.indexOf("booked") >= 0) || (status.indexOf("taken") >= 0)){
+    if (status.indexOf("taken") >= 0){
         return;
     }
 
@@ -92,52 +115,55 @@ function selectSeat(seat) {
     var row = col_row[0];
     var col = col_row[1];
 
-    console.log(row, col);
-
     var span_selected = document.getElementById("selected-seats");
-    var selected_seats = parseInt(span_selected.innerHTML, 10);
+    var selectedN = parseInt(span_selected.innerHTML, 10);
 
     var span_free = document.getElementById("free-seats");
-    var free_seats = parseInt(span_free.innerHTML, 10);
+    var freeN = parseInt(span_free.innerHTML, 10);
 
     if (status.indexOf("selected") >= 0) {
-
-        console.log("selected");
-        console.log(seat.getAttribute("class"));
-
+        // manage selected seat
+        //console.log("managing selected seat");
         seat.setAttribute("class", seat.getAttribute("class").replace("selected", "free"));
-        selected_seats = selected_seats - 1;
-        free_seats = free_seats + 1;
+        selectedN = selectedN - 1;
+        freeN = freeN + 1;
 
-        selectedObjects = selectedObjects.filter(
+        toBookObjects = toBookObjects.filter(
             function (obj){
                 return !(obj.row == row && obj.col == col);
             }
         );
     }
-    else {
-        console.log("non-selected");
+    else if(status.indexOf("free") >= 0) {
+        // manage free seat
+        //console.log("managing free seat");
         seat.setAttribute("class", seat.getAttribute("class").replace("free", "selected"));
-        selected_seats = selected_seats + 1;
-        free_seats = free_seats - 1;
-        selectedObjects.push(new Seat(row, col, "selected"));
+        selectedN = selectedN + 1;
+        freeN = freeN - 1;
+        toBookObjects.push(new Seat(row, col, "selected"));
+    }
+    else if(status.indexOf("booked") >= 0){
+        //console.log("managing booked seat");
+        seat.setAttribute("class", seat.getAttribute("class").replace("booked", "free"));
+        freeN = freeN + 1;
+        toCancelObjects.push(new Seat(row, col, "free"));
     }
 
-    span_selected.innerHTML = selected_seats;
-    span_free.innerHTML = free_seats;
+    span_selected.innerHTML = selectedN;
+    span_free.innerHTML = freeN;
 }
 
-function clearSelectedSeats() {
+function clearToBookSeats() {
     var seats = document.getElementsByTagName("span");
     for (var i = 0; i < seats.length; i++) {
         var seat = seats[i];
         if( seat.getAttribute("class").indexOf("seat selected") >= 0){
             seat.setAttribute("class", seat.getAttribute("class").replace("selected", "free"));
-
-            selectedObjects = Array();
-
         }
     }
+
+    toBookObjects = Array();
+    deleteCookie("toBook");
 
     var span_selected = document.getElementById("selected-seats");
     var selected_seats = parseInt(span_selected.innerHTML, 10);
@@ -149,9 +175,16 @@ function clearSelectedSeats() {
     span_free.innerHTML = free_seats + selected_seats;
 }
 
-function bookSeats() {
-    if (selectedObjects.length == 0)
+function releaseSelectedSeats() {
+    if (toCancelObjects.length == 0)
         return false;
-    document.cookie = "selected=" + JSON.stringify(selectedObjects);
+    document.cookie = "toCancel=" + JSON.stringify(toCancelObjects);
+    window.location.replace("auth_login.php");
+}
+
+function bookSeats() {
+    if (toBookObjects.length == 0)
+        return false;
+    document.cookie = "toBook=" + JSON.stringify(toBookObjects);
     window.location.replace("auth_login.php");
 }

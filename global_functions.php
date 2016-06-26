@@ -52,6 +52,22 @@
         }
     }
 
+    function set_https(){
+        if ($_SERVER["HTTPS"] != "on") {
+            header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+            exit();
+        }
+    }
+
+    function unset_https(){
+        if(isset($_SERVER["HTTPS"])){
+            if($_SERVER["HTTPS"] == "on") {
+                header("Location: http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+                exit();
+            }
+        }
+    }
+
     function connect_to_database(){
         $connection = mysqli_connect(db_host, db_user, db_password, db_database);
 
@@ -101,7 +117,7 @@
         return json_encode($rows);
     }
 
-    function store_booked_seats($username, $seats){
+    function store_to_book_seats($username, $seats){
         $connection = connect_to_database();
 
         try {
@@ -130,19 +146,64 @@
         $connection->close();
     }
 
-    function check_and_store_booked_seats($username){
-        if ( isset($_COOKIE['selected']) ){
-            $selected_seats = json_decode($_COOKIE['selected'], true);
-            store_booked_seats($username, $selected_seats);
-            setcookie("selected", "", time()-60*60);
-            //redirect_with_message("index.php", "s", "Selected seats have been booked.");
+    function store_to_cancel_seats($username, $seats){
+        $connection = connect_to_database();
+
+        try {
+            mysqli_autocommit($connection,false);
+
+            foreach ($seats as $s) {
+                $row = $s['row'];
+                $col = $s['col'];
+                $sql_statement = "delete from theater_booked_seat where cln='$col' and rwn='$row' and username='$username'";
+
+                if (!mysqli_query($connection, $sql_statement)) {
+                    redirect_with_message("index.php", "w", "query: ".$sql_statement." failed");
+                    //throw new Exception("query: '", $sql_statement, "' failed");
+                }
+            }
+            if (!mysqli_commit($connection)) {
+                throw Exception("Commit fails");
+            }
+
+        } catch (Exception $e) {
+            mysqli_rollback($connection);
+            redirect_with_message("index.php", "e", $e->getMessage());
+            //echo "Rollback ".$e->getMessage();
+        }
+
+        $connection->close();
+
+    }
+
+    function check_and_store_to_book_seats($username){
+        if ( isset($_COOKIE['toBook']) ){
+            $to_book_seats = json_decode($_COOKIE['toBook'], true);
+            store_to_book_seats($username, $to_book_seats);
+            setcookie("toBook", "", time()-60*60);
+            redirect_with_message("index.php", "s", "Selected seats have been booked.");
+        }
+    }
+
+    function check_and_store_to_cancel_seats($username){
+        if ( isset($_COOKIE['toCancel']) ){
+            $to_cancel_seats = json_decode($_COOKIE['toCancel'], true);
+            store_to_cancel_seats($username, $to_cancel_seats);
+            setcookie("toCancel", "", time()-60*60);
+            redirect_with_message("index.php", "s", "Selected booked seats have been canceled.");
         }
     }
 
     function redirect_with_message($page, $message_type, $message){
         header("HTTP/1.1 307 temporary redirect");
         $head = "Location: ".$page;
-
+        /*
+        if ($_SERVER['HTTPS'] == "off")
+            $head = "Location: http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+        else
+            $head = "Location: ".$page;
+        */
+        echo $head;
         if (!((empty($message_type) || empty($message)))){
             $head = $head."?".$message_type."msg=".urlencode($message);
         }

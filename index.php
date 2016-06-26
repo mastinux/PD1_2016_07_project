@@ -1,9 +1,12 @@
 <?php
-    
     include 'global_functions.php';
     session_start();
     if ( $username = user_logged_in() ){
         include 'auth_sessions.php';
+        set_https();
+    }
+    else{
+        unset_https();
     }
 ?>
 <!DOCTYPE html>
@@ -56,14 +59,15 @@
                 Selected seats :
                     <span id="selected-seats" class="label selected">
                         0
-                    </span><br>
+                    </span>
+                <br>
                 Free seats :
                     <span id="free-seats" class="label free">
-                        <?php echo height*base; ?>
+                        <?php echo ROWS*COLUMNS; ?>
                     </span><br>
                 Total seats :
                     <span id="total-seats" class="label label-primary">
-                        <?php echo height*base; ?>
+                        <?php echo ROWS*COLUMNS; ?>
                     </span><br>
                 Booked seats :
                     <span id="booked-seats" class="label booked">
@@ -76,8 +80,17 @@
                 <br>
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear</button>
+                        <button type="button" class="btn btn-default" onclick="clearToBookSeats()">Clear</button>
                     </div>
+                    <?php
+                        if ($username) {
+                            echo "<div class=\"btn-group\" role=\"group\">
+                                    <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
+                                        Release
+                                    </button>
+                                  </div>";
+                        }
+                    ?>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-default" onclick="bookSeats()">Book</button>
                     </div>
@@ -88,15 +101,17 @@
 
     <script type="text/javascript">
 
-        var base = "<?php print(base) ?>";
-        var height = "<?php print(height) ?>";
+        var cols = "<?php print(COLUMNS) ?>";
+        var rows = "<?php print(ROWS) ?>";
         
-        initTheaterMap(base, height);
+        initTheaterMap(cols, rows);
 
         var non_user_seats = <?php echo format_as_json(get_non_user_taken_seat($username)); ?>;
         setTakenSeats(non_user_seats);
         var user_seats = <?php echo format_as_json(get_user_taken_seat($username)); ?>;
         setBookedSeats(user_seats);
+        
+        setToBookSeats();
         
     </script>
     <noscript>

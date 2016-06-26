@@ -1,6 +1,7 @@
 <?php
 
     include 'global_functions.php';
+    set_https();
 
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET':
@@ -34,7 +35,7 @@
             session_start();
             $_SESSION['231826_user'] = $username;
             $_SESSION['time'] = time();
-            check_and_store_booked_seats($username);
+            check_and_store_to_book_seats($username);
             redirect_with_message("index.php", "s", "Logged in.");
         }
         else{

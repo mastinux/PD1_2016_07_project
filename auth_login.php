@@ -1,10 +1,11 @@
 <?php
-    session_start();
     include 'global_functions.php';
-
+    set_https();
+    session_start();
     if ( $username = user_logged_in() ){
         include 'auth_sessions.php';
-        check_and_store_booked_seats($username);
+        check_and_store_to_book_seats($username);
+        check_and_store_to_cancel_seats($username);
     }
 ?>
 <!DOCTYPE html>
