@@ -3,79 +3,90 @@ function checkEmail(email) {
     return re.test(email);
 }
 
+function removeElementById(id) {
+    var element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+}
+
+function printMessage(type, msg) {
+    if (document.getElementById(type + "-msg"))
+        removeElementById(type + "-msg");
+
+    var navbar = document.getElementById("navbar");
+
+    var div = document.createElement("div");
+    div.setAttribute("id", type + "-msg");
+    div.setAttribute("class", "col-lg-12");
+    navbar.parentNode.insertBefore(div, navbar.nextElementSibling);
+
+    var textDiv = document.createElement("div");
+    textDiv.setAttribute("class", "alert alert-" + type + " alert-dismissible");
+    textDiv.setAttribute("role", "alert");
+    textDiv.innerHTML = msg;
+
+    div.appendChild(textDiv);
+
+    var button = document.createElement("button");
+    button.setAttribute("type", "button");
+    button.setAttribute("class", "close");
+    button.setAttribute("data-dismiss", "alert");
+    button.setAttribute("aria-label", "Close");
+
+    textDiv.appendChild(button);
+
+    var span = document.createElement("span");
+    span.setAttribute("aria-hidden", "true");
+    span.innerHTML = "&times;";
+
+    button.appendChild(span);
+}
+
 function register(){
     var email = document.getElementById("new-email").value;
     var password = document.getElementById("new-password").value;
     var repeated_password = document.getElementById("new-password-repeated").value;
 
-    // TODO: remove previous messages by id
-
+    // checking empty values
     if ( !email || !password || !repeated_password ){
         console.log("Email or password not inserted in registration form.");
-        var navbar = document.getElementById("navbar");
-
-        var div = document.createElement("div");
-        div.setAttribute("class", "col-lg-12");
-        navbar.parentNode.insertBefore(div, navbar.nextElementSibling);
-
-        var textDiv = document.createElement("div");
-        textDiv.setAttribute("class", "alert alert-warning alert-dismissible");
-        textDiv.setAttribute("role", "alert");
-        textDiv.innerHTML = "Email or password not inserted in registration form.";
-
-        div.appendChild(textDiv);
-
-        var button = document.createElement("button");
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "close");
-        button.setAttribute("data-dismiss", "alert");
-        button.setAttribute("aria-label", "Close");
-
-        textDiv.appendChild(button);
-
-        var span = document.createElement("span");
-        span.setAttribute("aria-hidden", "true");
-        span.innerHTML = "&times;";
-
-        button.appendChild(span);
+        printMessage("warning", "Email or password not inserted in registration form.");
+        return false;
     }
-
-    return false;
-
-    var valid_email = false;
-    var valid_password = false;
 
     // checking email
-    if ( !checkEmail(email)){
-        console.log("invalid email");
-        var error_message = document.getElementById("error-message");
-        error_message.setAttribute("class", "alert alert-warning");
-        error_message.innerHTML = "Please enter proper email."
-    }
-    else{
-        // extracting username from email
-        console.log("valid email");
-        valid_email = true;
-        var username = email.substr(0, email.indexOf('@'));
-        console.log("username: ", username);
+    if ( !checkEmail(email) ){
+        console.log("Invalid email.");
+        printMessage("warning", "Invalid email inserted in registration form.");
+        return false;
     }
 
     // checking match between password and repeated_password
     if (password != repeated_password) {
-        console.log("password mismatch");
-        var error_message = document.getElementById("error-message");
-        error_message.setAttribute("class", "alert alert-warning");
-        error_message.innerHTML = "Please repeat same password."
-    } else {
-        console.log("passwords match");
-        valid_password = true;
-    }
-
-    if ( !(valid_email && valid_password) ) {
+        console.log("Password does not match.");
+        printMessage("warning", "Passwords inserted do not match in registration form.");
         return false;
     }
+
+    return true;
 }
 
 function login() {
-    
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    // checking empty values
+    if ( !username || !password ){
+        console.log("Username or password not inserted in login form.");
+        printMessage("warning", "Username or password not inserted in login form.");
+        return false;
+    }
+
+    // checking email
+    if ( !checkEmail(username) ){
+        console.log("Invalid email.");
+        printMessage("warning", "Invalid email inserted in login form.");
+        return false;
+    }
+
+    return true;
 }
