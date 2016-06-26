@@ -11,7 +11,7 @@
         $new=true;
     }
 
-    if ($new || ($diff > session_timeout)) { // new or with inactivity period too long
+    if ($new || ($diff > SESSION_TIMEOUT)) { // new or with inactivity period too long
         //session_unset(); 	// Deprecated
         $_SESSION=array();
         // If it's desired to kill the session, also delete the session cookie.

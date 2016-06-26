@@ -8,6 +8,12 @@ div.no-script-warning {
     text-align: center;
 }
 
+div.no-script-info {
+    font-weight: bold;
+    background: #66ccff;
+    text-align: center;
+}
+
 span.taken {background-color: #cc0000;}
 span.free {background-color: #33cc33;}
 span.selected {background-color: #ffff66;}

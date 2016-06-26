@@ -1,7 +1,10 @@
 <?php
     include 'global_settings.php';
-    include 'global_functions.php';
+    include 'functions.php';
+    include 'functions_database.php';
+
     set_https();
+    check_enabled_cookies();
 
     switch($_SERVER['REQUEST_METHOD']) {
     case 'GET':

@@ -1,7 +1,12 @@
 <?php
-    include 'global_functions.php';
-    set_https();
+    include 'functions.php';
+    include 'functions_database.php';
+    include 'functions_messages.php';
+
     session_start();
+    set_https();
+    check_enabled_cookies();
+
     if ( $username = user_logged_in() ){
         include 'auth_sessions.php';
         check_and_store_to_book_seats($username);

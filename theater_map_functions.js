@@ -2,12 +2,10 @@ var Seat = function(r, c, s) {
     this.row = r;
     this.col = c;
     this.status = s;
-    console.log("seat:", this.row, " ", this.col, " ", this.status, "\n");
 };
 
 var toBookObjects;
 var toCancelObjects;
-
 
 function getCookie(name) {
     var name = name + "=";
@@ -61,7 +59,7 @@ function initTheaterMap(cols, rows){
             span.setAttribute("id", ("seat-" + i + "-" + j));
             span.setAttribute("class", "label label-default seat free");
             span.setAttribute("onclick", "selectSeat(this)");
-            span.innerHTML = "seat-" + (i + 1) + "-" + (j + 1);
+            span.innerHTML = (i + 1) + "-" + (j + 1);
             cell.appendChild(span);
         }
     }
@@ -88,8 +86,11 @@ function setBookedSeats(seats) {
         seat.setAttribute("class", seat.getAttribute("class").replace("free", "booked"));
     }
 
-    var bookedN = parseInt(document.getElementById("booked-seats").innerHTML);
-    document.getElementById("booked-seats").innerHTML = (bookedN + seats.length).toString();
+    var bookedSeats = document.getElementById("booked-seats");
+    if (bookedSeats){
+        var bookedN = parseInt(bookedSeats.innerHTML);
+        document.getElementById("booked-seats").innerHTML = (bookedN + seats.length).toString();
+    }
 
     var freeN =  parseInt(document.getElementById("free-seats").innerHTML);
     document.getElementById("free-seats").innerHTML = (freeN - seats.length).toString();
@@ -99,11 +100,14 @@ function setBookedSeats(seats) {
 }
 
 function setToBookSeats(){
+
     var c = getCookie("toBook");
+
     if (c == "")
         return;
+
     toBookObjects = JSON.parse(getCookie("toBook"));
-    for (var i = 0; i< toBookObjects.length; i++){
+    for (var i = 0; i < toBookObjects.length; i++){
         var id = "seat-"+ toBookObjects[i]['row'] + "-" + toBookObjects[i]['col'];
         var seat = document.getElementById(id);
         seat.setAttribute("class", seat.getAttribute("class").replace("free", "selected"));
@@ -119,9 +123,8 @@ function setToBookSeats(){
 function selectSeat(seat) {
     var status = seat.getAttribute("class");
 
-    if (status.indexOf("taken") >= 0){
+    if (status.indexOf("taken") >= 0)
         return;
-    }
 
     var id = seat.getAttribute("id");
     var col_row = id.replace("seat-", "").split("-");
@@ -135,12 +138,11 @@ function selectSeat(seat) {
     var freeN = parseInt(span_free.innerHTML, 10);
 
     if (status.indexOf("selected") >= 0) {
-        // manage selected seat
-        //console.log("managing selected seat");
         seat.setAttribute("class", seat.getAttribute("class").replace("selected", "free"));
         selectedN = selectedN - 1;
         freeN = freeN + 1;
 
+        // removing seat from toBookObjects
         toBookObjects = toBookObjects.filter(
             function (obj){
                 return !(obj.row == row && obj.col == col);
@@ -148,17 +150,18 @@ function selectSeat(seat) {
         );
     }
     else if(status.indexOf("free") >= 0) {
-        // manage free seat
-        //console.log("managing free seat");
         seat.setAttribute("class", seat.getAttribute("class").replace("free", "selected"));
         selectedN = selectedN + 1;
         freeN = freeN - 1;
+
+        // adding seat to toBookObjects
         toBookObjects.push(new Seat(row, col, "selected"));
     }
     else if(status.indexOf("booked") >= 0){
-        //console.log("managing booked seat");
         seat.setAttribute("class", seat.getAttribute("class").replace("booked", "free"));
         freeN = freeN + 1;
+
+        // adding seat to toCancelObjects
         toCancelObjects.push(new Seat(row, col, "free"));
     }
 
@@ -166,7 +169,7 @@ function selectSeat(seat) {
     span_free.innerHTML = freeN;
 }
 
-function clearToBookSeats() {
+function clearSelectedSeats() {
     var seats = document.getElementsByTagName("span");
     for (var i = 0; i < seats.length; i++) {
         var seat = seats[i];
@@ -175,7 +178,7 @@ function clearToBookSeats() {
         }
     }
 
-    toBookObjects = Array();
+    toBookObjects = [];
     deleteCookie("toBook");
 
     var span_selected = document.getElementById("selected-seats");

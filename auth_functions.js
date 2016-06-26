@@ -8,6 +8,40 @@ function register(){
     var password = document.getElementById("new-password").value;
     var repeated_password = document.getElementById("new-password-repeated").value;
 
+    // TODO: remove previous messages by id
+
+    if ( !email || !password || !repeated_password ){
+        console.log("Email or password not inserted in registration form.");
+        var navbar = document.getElementById("navbar");
+
+        var div = document.createElement("div");
+        div.setAttribute("class", "col-lg-12");
+        navbar.parentNode.insertBefore(div, navbar.nextElementSibling);
+
+        var textDiv = document.createElement("div");
+        textDiv.setAttribute("class", "alert alert-warning alert-dismissible");
+        textDiv.setAttribute("role", "alert");
+        textDiv.innerHTML = "Email or password not inserted in registration form.";
+
+        div.appendChild(textDiv);
+
+        var button = document.createElement("button");
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "close");
+        button.setAttribute("data-dismiss", "alert");
+        button.setAttribute("aria-label", "Close");
+
+        textDiv.appendChild(button);
+
+        var span = document.createElement("span");
+        span.setAttribute("aria-hidden", "true");
+        span.innerHTML = "&times;";
+
+        button.appendChild(span);
+    }
+
+    return false;
+
     var valid_email = false;
     var valid_password = false;
 

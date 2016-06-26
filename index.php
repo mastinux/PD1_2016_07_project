@@ -1,5 +1,8 @@
 <?php
-    include 'global_functions.php';
+    include 'functions.php';
+    include 'functions_database.php';
+    include 'functions_messages.php';
+
     session_start();
     if ( $username = user_logged_in() ){
         include 'auth_sessions.php';
@@ -7,6 +10,8 @@
     }
     else{
         unset_https();
+        remove_cookie('toBook');
+        remove_cookie('toCancel');
     }
 ?>
 <!DOCTYPE html>
@@ -39,18 +44,54 @@
             Sorry: Your browser does not support or has disabled javascript.
         </div>
         <br>
+        <div class="no-script-info">
+            Please use a different browser or enabled javascript.
+        </div>
+        <br>
     </noscript>
+
+    <?php
+        $non_user_taken_seats = get_non_user_taken_seat($username);
+        $user_taken_seats = get_user_taken_seat($username);
+    ?>
 
     <?php manage_messages(); ?>
 
     <div class="row col-lg-12">
 
-        <div class="col-lg-4" id="booking-details-panel">
-            <div id="booking-panel" class="panel panel-default">
+        <div class="col-lg-4 col-md-4">
+
+            <div class="panel panel-default" id="session-details-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Session details</h3>
+                </div>
+                <div class="panel-body">
+                    <?php
+                    if ( $username ) {
+                        echo "
+                                <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
+                              
+                                <a href=\"auth_logout.php\">
+                                    <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                        <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
+                                    </button>
+                                </a>";
+                    }
+                    else{
+                        echo "<a href=\"auth_login.php\">
+                                    <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
+                                    </button>
+                                </a>";
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="booking-details-panel">
                 <div class="panel-heading">
                     <h3 class="panel-title">Booking details</h3>
                 </div>
-
                 <div class="panel-body">
                     Selected seats :
                         <span id="selected-seats" class="label selected">
@@ -65,10 +106,14 @@
                         <span id="total-seats" class="label label-primary">
                             <?php echo ROWS*COLUMNS; ?>
                         </span><br>
-                    Booked seats :
-                        <span id="booked-seats" class="label booked">
-                            0
-                        </span><br>
+                    <?
+                        if ($username){
+                            echo "Booked seats :
+                                    <span id=\"booked-seats\" class=\"label booked\">
+                                        0
+                                    </span><br>";
+                        }
+                    ?>
                     Taken seats :
                         <span id="taken-seats" class="label taken">
                             0
@@ -76,7 +121,7 @@
                     <br>
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default" onclick="clearToBookSeats()">Clear</button>
+                            <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear</button>
                         </div>
                         <?php
                         if ($username) {
@@ -93,44 +138,50 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <div class="col-lg-8" id="theater-seats-panel">
+        <div class="col-lg-8 col-md-8" id="theater-seats-panel">
+
             <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading">Theater seats</div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Theater seats</h3>
+                </div>
                 <div class="panel-body">
                     <div class="col-lg-12">
                         <div id="theater-map"></div>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>
 
     <script type="text/javascript">
+        if (navigator.cookieEnabled  == true) {
+            var cols = "<?php print(COLUMNS) ?>";
+            var rows = "<?php print(ROWS) ?>";
 
-        var cols = "<?php print(COLUMNS) ?>";
-        var rows = "<?php print(ROWS) ?>";
-        
-        initTheaterMap(cols, rows);
+            initTheaterMap(cols, rows);
 
-        var non_user_seats = <?php echo format_as_json(get_non_user_taken_seat($username)); ?>;
-        setTakenSeats(non_user_seats);
-        var user_seats = <?php echo format_as_json(get_user_taken_seat($username)); ?>;
-        setBookedSeats(user_seats);
-        
-        setToBookSeats();
+            var non_user_seats = <?php echo format_as_json($non_user_taken_seats); ?>;
+            if (non_user_seats.length > 0)
+                setTakenSeats(non_user_seats);
 
-        if (navigator.cookieEnabled == false){
+            var user_seats = <?php echo format_as_json($user_taken_seats); ?>;
+            if (user_seats.length > 0)
+                setBookedSeats(user_seats);
+
+            setToBookSeats();
+        }
+        else{
             // preventing site usage
-            removeElementById("navbar-buttons-list");
             removeElementById("theater-seats-panel");
             removeElementById("booking-details-panel");
+            removeElementById("session-details-panel");
             printCookieDisabledMessage();
         }
-
     </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
