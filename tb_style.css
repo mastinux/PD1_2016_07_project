@@ -2,6 +2,12 @@ body {
     background-color: #999999;
 }
 
+div.no-script-warning {
+    font-weight: bold;
+    background: #cc0000;
+    text-align: center;
+}
+
 span.taken {background-color: #cc0000;}
 span.free {background-color: #33cc33;}
 span.selected {background-color: #ffff66;}

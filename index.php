@@ -32,71 +32,81 @@
     <script type="text/javascript" src="theater_map_functions.js"></script>
 </head>
 <body>
-
     <?php include 'navbar.php'; ?>
-    
+
+    <noscript>
+        <div class="no-script-warning">
+            Sorry: Your browser does not support or has disabled javascript.
+        </div>
+        <br>
+    </noscript>
+
     <?php manage_messages(); ?>
 
-    <div class="col-lg-8">
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">Theater seats</div>
-            <div class="panel-body">
-                <div class="col-lg-12">
-                    <div id="theater-map"></div>
+    <div class="row col-lg-12">
+
+        <div class="col-lg-4" id="booking-details-panel">
+            <div id="booking-panel" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Booking details</h3>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-lg-4">
-        <div id="booking-panel" class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Booking details</h3>
-            </div>
-
-            <div class="panel-body">
-                Selected seats :
-                    <span id="selected-seats" class="label selected">
-                        0
-                    </span>
-                <br>
-                Free seats :
-                    <span id="free-seats" class="label free">
-                        <?php echo ROWS*COLUMNS; ?>
-                    </span><br>
-                Total seats :
-                    <span id="total-seats" class="label label-primary">
-                        <?php echo ROWS*COLUMNS; ?>
-                    </span><br>
-                Booked seats :
-                    <span id="booked-seats" class="label booked">
-                        0
-                    </span><br>
-                Taken seats :
-                    <span id="taken-seats" class="label taken">
-                        0
-                    </span><br>
-                <br>
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default" onclick="clearToBookSeats()">Clear</button>
-                    </div>
-                    <?php
+                <div class="panel-body">
+                    Selected seats :
+                        <span id="selected-seats" class="label selected">
+                            0
+                        </span>
+                    <br>
+                    Free seats :
+                        <span id="free-seats" class="label free">
+                            <?php echo ROWS*COLUMNS; ?>
+                        </span><br>
+                    Total seats :
+                        <span id="total-seats" class="label label-primary">
+                            <?php echo ROWS*COLUMNS; ?>
+                        </span><br>
+                    Booked seats :
+                        <span id="booked-seats" class="label booked">
+                            0
+                        </span><br>
+                    Taken seats :
+                        <span id="taken-seats" class="label taken">
+                            0
+                        </span><br>
+                    <br>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default" onclick="clearToBookSeats()">Clear</button>
+                        </div>
+                        <?php
                         if ($username) {
                             echo "<div class=\"btn-group\" role=\"group\">
-                                    <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
-                                        Release
-                                    </button>
-                                  </div>";
+                                        <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
+                                            Release
+                                        </button>
+                                      </div>";
                         }
-                    ?>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default" onclick="bookSeats()">Book</button>
+                        ?>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default" onclick="bookSeats()">Book</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-8" id="theater-seats-panel">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Theater seats</div>
+                <div class="panel-body">
+                    <div class="col-lg-12">
+                        <div id="theater-map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script type="text/javascript">
@@ -112,11 +122,16 @@
         setBookedSeats(user_seats);
         
         setToBookSeats();
-        
+
+        if (navigator.cookieEnabled == false){
+            // preventing site usage
+            removeElementById("navbar-buttons-list");
+            removeElementById("theater-seats-panel");
+            removeElementById("booking-details-panel");
+            printCookieDisabledMessage();
+        }
+
     </script>
-    <noscript>
-        Sorry: Your browser does not support or has disabled javascript
-    </noscript>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

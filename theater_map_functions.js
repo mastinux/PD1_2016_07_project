@@ -28,6 +28,19 @@ function deleteCookie(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
+function removeElementById(id) {
+    var element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+}
+
+function printCookieDisabledMessage(){
+    document.write( "<div class='col-lg-12'>" +
+                        "<div class=\"alert alert-warning\" role=\"alert\">" +
+                            "Cookies are disabled. Please enable them to use this site." +
+                        "</div>" +
+                    "</div>");
+}
+
 function initTheaterMap(cols, rows){
     toBookObjects = [];
     toCancelObjects = [];

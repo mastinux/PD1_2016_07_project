@@ -38,7 +38,7 @@
 
     <?php manage_messages(); ?>
 
-    <div class="col-lg-6">
+    <div class="col-lg-6 col-md-6">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-6  col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Log in</h3>
