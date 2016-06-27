@@ -10,8 +10,6 @@
     }
     else{
         unset_https();
-        //remove_cookie('toBook');
-        //remove_cookie('toCancel');
     }
 ?>
 <!DOCTYPE html>
@@ -72,14 +70,14 @@
                                     <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
                                   
                                     <a href=\"auth_logout.php\">
-                                        <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                        <button type=\"button\" class=\"btn btn-default btn-lg\">
                                             <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
                                         </button>
                                     </a>";
                         }
                         else{
                             echo "<a href=\"auth_login.php\">
-                                        <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                        <button type=\"button\" class=\"btn btn-default btn-lg\">
                                             <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
                                         </button>
                                     </a>";
@@ -93,52 +91,55 @@
                     <h3 class="panel-title">Booking details</h3>
                 </div>
                 <div class="panel-body">
-                    Selected seats :
-                        <span id="selected-seats" class="label selected">
-                            0
-                        </span>
-                    <br>
-                    Free seats :
-                        <span id="free-seats" class="label free">
-                            <?php echo ROWS*COLUMNS; ?>
-                        </span><br>
-                    Total seats :
+                    <h4>
+                        Selected seats :
+                            <span id="selected-seats" class="label selected">0</span><br>
+                    </h4>
+                    <?
+                        if ($username){
+                            echo "<h4>Booked seats :
+                                        <span id=\"booked-seats\" class=\"label booked\">0</span><br>
+                                  </h4>";
+                        }
+                    ?>
+                    <h4>
+                        Free seats :
+                            <span id="free-seats" class="label free">
+                                <?php echo ROWS*COLUMNS; ?>
+                            </span><br>
+                    </h4>
+                    <h4>
+                        Taken seats :
+                            <span id="taken-seats" class="label taken">
+                                0
+                            </span><br>
+                    </h4>
+                    <h4>
+                        Total seats :
                         <span id="total-seats" class="label label-primary">
                             <?php echo ROWS*COLUMNS; ?>
                         </span><br>
-                    <?
-                        if ($username){
-                            echo "Booked seats :
-                                    <span id=\"booked-seats\" class=\"label booked\">
-                                        0
-                                    </span><br>";
-                        }
-                    ?>
-                    Taken seats :
-                        <span id="taken-seats" class="label taken">
-                            0
-                        </span><br>
+                    </h4>
                     <br>
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear seats</button>
+                            <button type="button" class="btn btn-default btn-lg" onclick="clearSelectedSeats()">Clear</button>
                         </div>
                         <?php
-                            if ($username) {
-                                echo "<div class=\"btn-group\" role=\"group\">
-                                            <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
-                                                Release seats
+                        if ($username) {
+                            echo "<div class=\"btn-group\" role=\"group\">
+                                            <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"releaseSelectedSeats()\">
+                                                Release
                                             </button>
                                           </div>";
-                            }
+                        }
                         ?>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default" onclick="bookSeats()">Book seats</button>
+                            <button type="button" class="btn btn-default btn-lg" onclick="bookSeats()">Book</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="col-lg-8 col-md-8" id="theater-seats-panel">

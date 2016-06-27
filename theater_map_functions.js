@@ -57,7 +57,7 @@ function initTheaterMap(cols, rows){
 
             var span = document.createElement("span");
             span.setAttribute("id", ("seat-" + i + "-" + j));
-            span.setAttribute("class", "label label-default seat free");
+            span.setAttribute("class", "label label-default seat free lrg");
             span.setAttribute("onclick", "selectSeat(this)");
             span.innerHTML = (i + 1) + "-" + (j + 1);
             cell.appendChild(span);
