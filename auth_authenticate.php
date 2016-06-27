@@ -8,42 +8,47 @@
 
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET':
-            redirect_with_message("auth_login.php", "e", "Login action must be with post method.");
+            redirect_with_message("auth_login.php", "w", "Login action must be with post method.");
         case 'POST':
             $username = $_POST['username'];
             $password = $_POST['password'];
             break;
     }
 
-    if ( !(($username != "") and ($password != "")) ) {
-        // invalid request
-        redirect_with_message("auth_login.php", "e", "Email or password not inserted.");
+    if ( $username == ""  || $password == "") {
+        redirect_with_message("auth_login.php", "w", "Email or password not inserted.");
     }
     else{
-        // valid request
+        $username = strip_tags($username);
+        $password = strip_tags($password);
+
         $connection = connect_to_database();
 
-        // username and password validation
         $username = mysqli_real_escape_string($connection, $username);
         $password = mysqli_real_escape_string($connection, $password);
 
         $sql_statement = "select * from theater_user where email = '$username' and pw = md5('$password')";
 
-        if ( !($result = mysqli_query($connection, $sql_statement)) ){
-            redirect_with_message("", "e", mysqli_error($connection));
+        try{
+            if ( !($result = mysqli_query($connection, $sql_statement)) )
+                throw new Exception("query '" . $sql_statement . "' failed.");
+        }catch (Exception $e){
+            echo $e->getMessage();
         }
-        $connection->close();
 
-        if ( $result->num_rows == 1){
+        $rows = $result->num_rows;
+        //mysqli_free_result($result);
+        mysqli_close($connection);
+
+        if ( $rows == 1){
             session_start();
             $_SESSION['231826_user'] = $username;
-            $_SESSION['time'] = time();
+            $_SESSION['231826_time'] = time();
             check_and_store_to_book_seats($username);
             redirect_with_message("index.php", "s", "Logged in.");
         }
         else{
-            destroy_user_session();
-            redirect_with_message("auth_login.php", "e", "Invalid username or password inserted");
+            redirect_with_message("auth_login.php", "d", "Invalid username or password inserted.");
         }
     }
 ?>

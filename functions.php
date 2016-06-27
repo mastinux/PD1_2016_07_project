@@ -30,10 +30,8 @@
         header("HTTP/1.1 307 temporary redirect");
         $head = "Location: ".$page;
 
-        echo $head;
-        if (!((empty($message_type) || empty($message)))){
+        if (!((empty($message_type) || empty($message))))
             $head = $head."?".$message_type."msg=".urlencode($message);
-        }
 
         header($head);
         exit;

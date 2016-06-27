@@ -9,8 +9,10 @@ function removeElementById(id) {
 }
 
 function printMessage(type, msg) {
-    if (document.getElementById(type + "-msg"))
-        removeElementById(type + "-msg");
+    var types = ['info', 'success', 'warning', 'danger'];
+    for (var i = 0; i < types.length; i++)
+        if (document.getElementById(types[i] + "-msg"))
+            removeElementById(types[i] + "-msg");
 
     var navbar = document.getElementById("navbar");
 
@@ -56,14 +58,14 @@ function register(){
     // checking email
     if ( !checkEmail(email) ){
         console.log("Invalid email.");
-        printMessage("warning", "Invalid email inserted in registration form.");
+        printMessage("danger", "Invalid email inserted in registration form.");
         return false;
     }
 
     // checking match between password and repeated_password
     if (password != repeated_password) {
         console.log("Password does not match.");
-        printMessage("warning", "Passwords inserted do not match in registration form.");
+        printMessage("danger", "Passwords inserted do not match in registration form.");
         return false;
     }
 
@@ -84,7 +86,7 @@ function login() {
     // checking email
     if ( !checkEmail(username) ){
         console.log("Invalid email.");
-        printMessage("warning", "Invalid email inserted in login form.");
+        printMessage("danger", "Invalid email inserted in login form.");
         return false;
     }
 

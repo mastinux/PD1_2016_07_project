@@ -10,6 +10,6 @@
     define("db_database", "theater_db");
 
     // session
-    define("SESSION_TIMEOUT", 15); //seconds
+    define("SESSION_TIMEOUT", 2*60); //seconds
 ?>
 

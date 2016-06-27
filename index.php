@@ -10,8 +10,8 @@
     }
     else{
         unset_https();
-        remove_cookie('toBook');
-        remove_cookie('toCancel');
+        //remove_cookie('toBook');
+        //remove_cookie('toCancel');
     }
 ?>
 <!DOCTYPE html>
@@ -67,23 +67,23 @@
                 </div>
                 <div class="panel-body">
                     <?php
-                    if ( $username ) {
-                        echo "
-                                <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
-                              
-                                <a href=\"auth_logout.php\">
-                                    <button type=\"button\" class=\"btn btn-default navbar-btn\">
-                                        <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
-                                    </button>
-                                </a>";
-                    }
-                    else{
-                        echo "<a href=\"auth_login.php\">
-                                    <button type=\"button\" class=\"btn btn-default navbar-btn\">
-                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
-                                    </button>
-                                </a>";
-                    }
+                        if ( $username ) {
+                            echo "
+                                    <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
+                                  
+                                    <a href=\"auth_logout.php\">
+                                        <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                            <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
+                                        </button>
+                                    </a>";
+                        }
+                        else{
+                            echo "<a href=\"auth_login.php\">
+                                        <button type=\"button\" class=\"btn btn-default navbar-btn\">
+                                            <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
+                                        </button>
+                                    </a>";
+                        }
                     ?>
                 </div>
             </div>
@@ -121,19 +121,19 @@
                     <br>
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear</button>
+                            <button type="button" class="btn btn-default" onclick="clearSelectedSeats()">Clear seats</button>
                         </div>
                         <?php
-                        if ($username) {
-                            echo "<div class=\"btn-group\" role=\"group\">
-                                        <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
-                                            Release
-                                        </button>
-                                      </div>";
-                        }
+                            if ($username) {
+                                echo "<div class=\"btn-group\" role=\"group\">
+                                            <button type=\"button\" class=\"btn btn-default\" onclick=\"releaseSelectedSeats()\">
+                                                Release seats
+                                            </button>
+                                          </div>";
+                            }
                         ?>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default" onclick="bookSeats()">Book</button>
+                            <button type="button" class="btn btn-default" onclick="bookSeats()">Book seats</button>
                         </div>
                     </div>
                 </div>

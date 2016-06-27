@@ -158,7 +158,7 @@ function selectSeat(seat) {
         toBookObjects.push(new Seat(row, col, "selected"));
     }
     else if(status.indexOf("booked") >= 0){
-        seat.setAttribute("class", seat.getAttribute("class").replace("booked", "free"));
+        seat.setAttribute("class", seat.getAttribute("class").replace("booked", "free canceled"));
         freeN = freeN + 1;
 
         // adding seat to toCancelObjects

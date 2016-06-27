@@ -1,5 +1,13 @@
 <?php
 
+function print_message($type, $message){
+    return "<div class=\"alert alert-".$type." alert-dismissible\" role=\"alert\">
+                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                    <span aria-hidden=\"true\">&times;</span>
+                </button>".$message."
+              </div>";
+}
+/*
 function print_success_message($message){
     return "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">
                 <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
@@ -31,23 +39,31 @@ function print_danger_message($message){
                 </button>".$message."
               </div>";
 }
-
+*/
 function manage_messages(){
     if (isset($_REQUEST['smsg'])){
         $smsg = $_REQUEST['smsg'];
-        echo "<div class='col-lg-12'>", print_success_message($smsg),"</div>";
+        $smsg = strip_tags($smsg);
+        //echo "<div class='col-lg-12'>", print_success_message($smsg),"</div>";
+        echo "<div class='col-lg-12'>", print_message("success", $smsg),"</div>";
     }
-    if (isset($_REQUEST['imsg'])){
+    else if (isset($_REQUEST['imsg'])){
         $imsg = $_REQUEST['imsg'];
-        echo "<div class='col-lg-12'>", print_info_message($imsg),"</div>";
+        $imsg = strip_tags($imsg);
+        //echo "<div class='col-lg-12'>", print_info_message($imsg),"</div>";
+        echo "<div class='col-lg-12'>", print_message("info", $imsg),"</div>";
     }
-    if (isset($_REQUEST['wmsg'])){
+    else if (isset($_REQUEST['wmsg'])){
         $wmsg = $_REQUEST['wmsg'];
-        echo "<div class='col-lg-12'>", print_warning_message($wmsg),"</div>";
+        $wmsg = strip_tags($wmsg);
+        //echo "<div class='col-lg-12'>", print_warning_message($wmsg),"</div>";
+        echo "<div class='col-lg-12'>", print_message("warning", $wmsg),"</div>";
     }
-    if (isset($_REQUEST['emsg'])){
-        $emsg = $_REQUEST['emsg'];
-        echo "<div class='col-lg-12'>", print_danger_message($emsg),"</div>";
+    else if (isset($_REQUEST['dmsg'])){
+        $dmsg = $_REQUEST['dmsg'];
+        $dmsg = strip_tags($dmsg);
+        //echo "<div class='col-lg-12'>", print_danger_message($dmsg),"</div>";
+        echo "<div class='col-lg-12'>", print_message("danger", $dmsg),"</div>";
     }
 }
 

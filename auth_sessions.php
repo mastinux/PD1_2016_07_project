@@ -4,8 +4,8 @@
     $diff=0;
     $new=false;
 
-    if (isset($_SESSION['time'])){
-        $t0=$_SESSION['time'];
+    if (isset($_SESSION['231826_time'])){
+        $t0=$_SESSION['231826_time'];
         $diff=($t-$t0);  // inactivity period
     } else {
         $new=true;
@@ -29,7 +29,7 @@
         redirect_with_message("auth_login.php", "w", "Session time out.");
         exit; // IMPORTANT to avoid further output from the script
     } else {
-        $_SESSION['time']=time(); /* update time */
+        $_SESSION['231826_time']=time(); /* update time */
     }
 
 ?>

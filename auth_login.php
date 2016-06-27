@@ -38,9 +38,7 @@
 <body>
 
     <?php include 'navbar.php'; ?>
-
-    <?php echo "<div class='col-lg-12'>", print_info_message("Please register or log in to book your seats."),"</div>"; ?>
-
+    
     <?php manage_messages(); ?>
 
     <div class="col-lg-6 col-md-6">
