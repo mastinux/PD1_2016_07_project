@@ -20,15 +20,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Theater Booker</title>
-
     <!-- Bootstrap -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script type="text/javascript" src="bootstrap/html5shiv.min.js"/>
+    <script type="text/javascript" src="bootstrap/respond.min.js"/>
     <![endif]-->
 
     <link href="tb_style.css" rel="stylesheet" type="text/css"/>
@@ -66,21 +64,19 @@
                 <div class="panel-body">
                     <?php
                         if ( $username ) {
-                            echo "
-                                    <p class=\"navbar-text\">Signed in as <b>".$username."</b></p>                              
-                                  
-                                    <a href=\"auth_logout.php\">
-                                        <button type=\"button\" class=\"btn btn-default btn-lg\">
-                                            <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"> Logout</span>
-                                        </button>
-                                    </a>";
+                            echo "<p>Signed in as <b>".$username."</b></p>                                                                 
+                                  <a href=\"auth_logout.php\">
+                                    <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"clearSelectedSeats()\">
+                                        <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"></span> Logout                                                
+                                    </button>                                                                                                                                                                    
+                                  </a>";
                         }
                         else{
                             echo "<a href=\"auth_login.php\">
-                                        <button type=\"button\" class=\"btn btn-default btn-lg\">
-                                            <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"> Login</span>
-                                        </button>
-                                    </a>";
+                                    <button type=\"button\" class=\"btn btn-default btn-lg\">
+                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"></span> Login                                                
+                                    </button>                                                                                                                                                                    
+                                  </a>";
                         }
                     ?>
                 </div>
@@ -91,51 +87,33 @@
                     <h3 class="panel-title">Booking details</h3>
                 </div>
                 <div class="panel-body">
-                    <h4>
-                        Selected seats :
-                            <span id="selected-seats" class="label selected">0</span><br>
-                    </h4>
+                    Selected seats : <span id="selected-seats" class="label selected visible">0</span><br>
                     <?
-                        if ($username){
-                            echo "<h4>Booked seats :
-                                        <span id=\"booked-seats\" class=\"label booked\">0</span><br>
-                                  </h4>";
-                        }
+                        if ($username)
+                            echo "Booked seats : <span id=\"booked-seats\" class=\"label booked visible\">0</span><br>";
                     ?>
-                    <h4>
-                        Free seats :
-                            <span id="free-seats" class="label free">
-                                <?php echo ROWS*COLUMNS; ?>
-                            </span><br>
-                    </h4>
-                    <h4>
-                        Taken seats :
-                            <span id="taken-seats" class="label taken">
-                                0
-                            </span><br>
-                    </h4>
-                    <h4>
-                        Total seats :
-                        <span id="total-seats" class="label label-primary">
-                            <?php echo ROWS*COLUMNS; ?>
-                        </span><br>
-                    </h4>
-                    <br>
+                    Free seats : <span id="free-seats" class="label free visible"><?php echo ROWS*COLUMNS; ?></span><br>
+                    Taken seats : <span id="taken-seats" class="label taken visible">0</span><br>
+                    Total seats : <span id="total-seats" class="label label-primary visible"><?php echo ROWS*COLUMNS; ?></span><br><br>
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-lg" onclick="clearSelectedSeats()">Clear</button>
+                            <button type="button" class="btn btn-default btn-lg" onclick="clearSelectedSeats()">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Clear
+                            </button>
                         </div>
                         <?php
                         if ($username) {
                             echo "<div class=\"btn-group\" role=\"group\">
-                                            <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"releaseSelectedSeats()\">
-                                                Release
-                                            </button>
-                                          </div>";
+                                    <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"releaseSelectedSeats()\">
+                                        <span class=\"glyphicon glyphicon-minus\" aria-hidden=\"true\"></span> Release
+                                    </button>
+                                  </div>";
                         }
                         ?>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-lg" onclick="bookSeats()">Book</button>
+                            <button type="button" class="btn btn-default btn-lg" onclick="bookSelectedSeats()">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Book
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -186,7 +164,7 @@
     </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 </body>

@@ -14,9 +14,10 @@ div.no-script-info {
     text-align: center;
 }
 
-span.taken {background-color: #cc0000;}
-span.free {background-color: #33cc33;}
-span.selected {background-color: #ffff66;}
+span.visible{color: #000000;}
+span.taken {background-color: #e60000;}
+span.free {background-color: #090;}
+span.selected {background-color: #ffff00;}
 span.booked {background-color: #ff9900;}
 
 span.lrg{

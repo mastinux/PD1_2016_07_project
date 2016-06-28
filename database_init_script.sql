@@ -1,4 +1,4 @@
-
+/*
 DROP DATABASE theater_db;
 create database theater_db;
 
@@ -40,7 +40,7 @@ insert into theater_booked_seat(cln, rwn, username) values(4,4,'u2@p.it');
 
 #SET SQL_SAFE_UPDATES = 0;
 #delete from theater_user where pw != "a";
-
+*/
 use theater_db;
 
 select * from theater_user;
