@@ -25,13 +25,14 @@
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="bootstrap/html5shiv.min.js"/>
-    <script type="text/javascript" src="bootstrap/respond.min.js"/>
+    <script type="text/javascript" src="bootstrap/html5shiv.min.js"></script>
+    <script type="text/javascript" src="bootstrap/respond.min.js"></script>
     <![endif]-->
 
     <link href="tb_style.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="theater_map_functions.js"></script>
 </head>
+
 <body>
     <?php include 'navbar.php'; ?>
 

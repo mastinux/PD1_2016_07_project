@@ -7,15 +7,18 @@
     check_enabled_cookies();
 
     switch($_SERVER['REQUEST_METHOD']) {
-    case 'GET':
-        // request is not post
-        redirect_with_message("auth_login.php", "w", "Register action must be with post method.");
-        break;
-    case 'POST':
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $password_repeated = $_POST['password-repeated'];
-        break;
+        case 'GET': {
+            redirect_with_message("auth_login.php", "w", "Register action must be with post method.");
+            break;
+        }
+        case 'POST':{
+            if ( !isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['password-repeated']) )
+                redirect_with_message("auth_login.php", "w", "Email or password not set in registration form.");
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $password_repeated = $_POST['password-repeated'];
+            break;
+        }
     }
 
     if ( $email == "" || $password == "" || $password_repeated == "" ) {
@@ -26,8 +29,8 @@
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // checking unique email
             $connection = connect_to_database();
-
-            $email = strip_tags($email);
+            
+            $email = sanitizeString($email);
             $email = mysqli_real_escape_string($connection, $email);
 
             $sql_statement = "select * from theater_user where email = '$email'";
@@ -50,10 +53,10 @@
                 // valid email and password
                 $connection = connect_to_database();
 
-                $password = strip_tags($password);
+                $password = sanitizeString($password);
                 $password = mysqli_real_escape_string($connection, $password);
                 
-                $password_repeated = strip_tags($password_repeated);
+                $password_repeated = sanitizeString($password_repeated);
                 $password_repeated = mysqli_real_escape_string($connection, $password_repeated);
 
                 $sql_statement = "insert into theater_user(email, pw) values('$email',md5('$password'))";
@@ -71,7 +74,7 @@
                 $_SESSION['231826_user'] = $email;
                 $_SESSION['231826_time'] = time();
                 check_and_store_to_book_seats($email);
-                redirect_with_message("index.php", "s", "Registered and logged in.");
+                redirect_with_message("index.php", "s", "Registered and logged in as " . $email . ".");
             }
             else{
                 // passwords mismatch

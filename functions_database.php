@@ -1,4 +1,5 @@
 <?php
+    include 'functions_strcheck.php';
 
     function connect_to_database(){
         $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, db_database);
@@ -19,7 +20,7 @@
 
         $connection = connect_to_database();
 
-        $username = strip_tags($username);
+        $username = sanitizeString($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         $sql_statement = "select * from theater_booked_seat where username != '$username'";
@@ -45,7 +46,7 @@
 
         $connection = connect_to_database();
 
-        $username = strip_tags($username);
+        $username = sanitizeString($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         $sql_statement = "select * from theater_booked_seat where username = '$username'";
@@ -74,7 +75,7 @@
         $completed_transaction = true;
         $connection = connect_to_database();
 
-        $username = strip_tags($username);
+        $username = sanitizeString($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         try {
@@ -106,7 +107,7 @@
         $completed_transaction = true;
         $connection = connect_to_database();
 
-        $username = strip_tags($username);
+        $username = sanitizeString($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         try {
