@@ -1,12 +1,19 @@
 <?php
-    include 'functions_strcheck.php';
 
-    function connect_to_database(){
-        $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, db_database);
+    function sanitizeString($var) {
+        $var = strip_tags($var);
+        $var = htmlentities($var);
+        $var = stripcslashes($var);
+        return $var;
+    }
+
+    function connect_to_database() {
+        $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 
         try{
-            if ( mysqli_connect_error() )
+            if ( mysqli_connect_error() ) {
                 throw new Exception("Error during connection to DB");
+            }
         }
         catch(Exception $e){
             echo $e->getMessage();
@@ -16,7 +23,7 @@
     }
 
     function get_non_user_taken_seat($username){
-        $rows = [];
+        $rows = Array();
 
         $connection = connect_to_database();
 
@@ -42,7 +49,7 @@
     }
 
     function get_user_taken_seat($username){
-        $rows = [];
+        $rows = Array();
 
         $connection = connect_to_database();
 
@@ -90,7 +97,7 @@
                     throw new Exception("Query '" . $sql_statement . "' failed.");
             }
             if (!mysqli_commit($connection))
-                throw Exception("Commit failed.");
+                throw new Exception("Commit failed.");
         } catch (Exception $e) {
             mysqli_rollback($connection);
             $completed_transaction = false;
@@ -118,12 +125,15 @@
                 $col = $s['col'];
                 $sql_statement = "delete from theater_booked_seat where cln='$col' and rwn='$row' and username='$username'";
 
-                if (!mysqli_query($connection, $sql_statement))
+                if (!mysqli_query($connection, $sql_statement)) {
                     throw new Exception("Query '" . $sql_statement . "' failed.");
+                }
             }
-            if ( !mysqli_commit($connection) )
-                throw Exception("Commit failed");
-        } catch (Exception $e) {
+            if ( !mysqli_commit($connection) ){
+                throw new Exception("Commit failed");
+            }
+        }
+        catch (Exception $e){
             mysqli_rollback($connection);
             $completed_transaction = false;
             //echo $e->getMessage();
@@ -131,8 +141,9 @@
 
         mysqli_close($connection);
 
-        if( !$completed_transaction )
+        if( !$completed_transaction ){
             redirect_with_message("index.php", "d", "Selected seats have not been booked by you.");
+        }
     }
 
     function check_and_store_to_book_seats($username){
