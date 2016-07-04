@@ -99,13 +99,25 @@ function setBookedSeats(seats) {
     document.getElementById("taken-seats").innerHTML = (takenN + seats.length).toString();
 }
 
-function setToBookSeats(){
+function setToBookSeats(alreadyTakenSeats){
     var c = getCookie("toBook");
 
     if (c == "")
         return;
 
     toBookObjects = JSON.parse(getCookie("toBook"));
+
+    // in case previous book action fails
+    for (var i = 0; i< alreadyTakenSeats.length; i++){
+        var row = alreadyTakenSeats[i]['rwn'];
+        var col = alreadyTakenSeats[i]['cln'];
+
+        toBookObjects = toBookObjects.filter(
+            function (obj){
+                return !(obj.row == row && obj.col == col);
+            }
+        );
+    }
 
     for (var i = 0; i < toBookObjects.length; i++){
         var id = "seat-"+ toBookObjects[i]['row'] + "-" + toBookObjects[i]['col'];
@@ -118,6 +130,8 @@ function setToBookSeats(){
 
     var freeN = parseInt(document.getElementById("free-seats").innerHTML);
     document.getElementById("free-seats").innerHTML = (freeN - toBookObjects.length).toString();
+
+    console.log(toBookObjects);
 }
 
 function selectSeat(seat) {
@@ -158,11 +172,22 @@ function selectSeat(seat) {
         toBookObjects.push(new Seat(row, col, "selected"));
     }
     else if(status.indexOf("booked") >= 0){
-        seat.setAttribute("class", seat.getAttribute("class").replace("booked", "free canceled"));
+        seat.setAttribute("class", seat.getAttribute("class").replace("booked", "canceled"));
         freeN = freeN + 1;
 
         // adding seat to toReleaseObjects
         toReleaseObjects.push(new Seat(row, col, "free"));
+    }
+
+    else if(status.indexOf("canceled") >= 0){
+        seat.setAttribute("class", seat.getAttribute("class").replace("canceled", "booked"));
+
+        // removing seat from toBookObjects
+        toReleaseObjects = toReleaseObjects.filter(
+            function (obj){
+                return !(obj.row == row && obj.col == col);
+            }
+        );
     }
     
     span_selected.innerHTML = selectedN;
@@ -174,15 +199,20 @@ function clearSelectedSeats() {
 
     for (var i = 0; i < seats.length; i++) {
         if ( seats[i].getAttribute("class") )
-            if ( (seats[i]).getAttribute("class").indexOf("seat") >= 0 )
-                if( (seats[i]).getAttribute("class").indexOf("selected") >= 0){
-                    console.log(seats[i]);
+            if ( (seats[i]).getAttribute("class").indexOf("seat") >= 0 ) {
+                if ((seats[i]).getAttribute("class").indexOf("selected") >= 0) {
                     (seats[i]).setAttribute("class", (seats[i]).getAttribute("class").replace("selected", "free"));
                 }
+                if ((seats[i]).getAttribute("class").indexOf("canceled") >= 0) {
+                    (seats[i]).setAttribute("class", (seats[i]).getAttribute("class").replace("canceled", "booked"));
+                }
+            }
     }
 
     toBookObjects = [];
     deleteCookie("toBook");
+
+    toReleaseObjects = [];
 
     var span_selected = document.getElementById("selected-seats");
     var selected_seats = parseInt(span_selected.innerHTML, 10);

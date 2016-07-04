@@ -80,6 +80,8 @@
 
     function store_to_book_seats($username, $seats){
         $completed_transaction = true;
+        $err_msg = "";
+
         $connection = connect_to_database();
 
         $username = sanitizeString($username);
@@ -91,27 +93,36 @@
             foreach ($seats as $s) {
                 $row = $s['row'];
                 $col = $s['col'];
+
+                if ( $row > ROWS - 1 )
+                    throw new Exception("Row index exceeded maximum value.");
+
+                if ( $col > COLUMNS - 1)
+                    throw new Exception("Column index exceeded maximum value.");
+
                 $sql_statement = "insert into theater_booked_seat(cln, rwn, username) values('$col','$row','$username')";
 
                 if (!mysqli_query($connection, $sql_statement))
-                    throw new Exception("Query '" . $sql_statement . "' failed.");
+                    throw new Exception("Unable to book your selected seats, please try again.");
             }
             if (!mysqli_commit($connection))
                 throw new Exception("Commit failed.");
         } catch (Exception $e) {
             mysqli_rollback($connection);
             $completed_transaction = false;
-            //echo $e->getMessage();
+            $err_msg = $e->getMessage();
         }
 
         mysqli_close($connection);
 
         if( !$completed_transaction )
-            redirect_with_message("index.php", "d", "Selected seats already taken.");
+            redirect_with_message("index.php", "d", $err_msg);
     }
 
     function store_to_cancel_seats($username, $seats){
         $completed_transaction = true;
+        $err_msg = "";
+
         $connection = connect_to_database();
 
         $username = sanitizeString($username);
@@ -123,26 +134,33 @@
             foreach ($seats as $s) {
                 $row = $s['row'];
                 $col = $s['col'];
+
+                if ( $row > ROWS - 1 )
+                    throw new Exception("Row index exceeded maximum value.");
+
+                if ( $col > COLUMNS - 1)
+                    throw new Exception("Column index exceeded maximum value.");
+
                 $sql_statement = "delete from theater_booked_seat where cln='$col' and rwn='$row' and username='$username'";
 
                 if (!mysqli_query($connection, $sql_statement)) {
-                    throw new Exception("Query '" . $sql_statement . "' failed.");
+                    throw new Exception("Unable to release your selected seats, please try again.");
                 }
             }
             if ( !mysqli_commit($connection) ){
-                throw new Exception("Commit failed");
+                throw new Exception("Commit failed.");
             }
         }
         catch (Exception $e){
             mysqli_rollback($connection);
             $completed_transaction = false;
-            //echo $e->getMessage();
+            $err_msg = $e->getMessage();
         }
 
         mysqli_close($connection);
 
         if( !$completed_transaction ){
-            redirect_with_message("index.php", "d", "Selected seats have not been booked by you.");
+            redirect_with_message("index.php", "d", $err_msg);
         }
     }
 

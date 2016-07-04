@@ -19,6 +19,7 @@ span.taken {background-color: #e60000;}
 span.free {background-color: #090;}
 span.selected {background-color: #ffff00;}
 span.booked {background-color: #ff9900;}
+span.canceled {background-color: #00b300;}
 
 span.lrg{
     height:100%;

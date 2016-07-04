@@ -153,7 +153,7 @@
             if (user_seats.length > 0)
                 setBookedSeats(user_seats);
 
-            setToBookSeats();
+            setToBookSeats(non_user_seats);
         }
         else{
             // preventing site usage
