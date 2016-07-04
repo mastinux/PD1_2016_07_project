@@ -30,7 +30,7 @@
             // checking unique email
             $connection = connect_to_database();
             
-            $email = sanitizeString($email);
+            $email = sanitize_string($email);
             $email = mysqli_real_escape_string($connection, $email);
 
             $sql_statement = "select * from theater_user where email = '$email'";
@@ -53,10 +53,10 @@
                 // valid email and password
                 $connection = connect_to_database();
 
-                $password = sanitizeString($password);
+                $password = sanitize_string($password);
                 $password = mysqli_real_escape_string($connection, $password);
                 
-                $password_repeated = sanitizeString($password_repeated);
+                $password_repeated = sanitize_string($password_repeated);
                 $password_repeated = mysqli_real_escape_string($connection, $password_repeated);
 
                 $sql_statement = "insert into theater_user(email, pw) values('$email',md5('$password'))";

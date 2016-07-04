@@ -6,6 +6,9 @@
     set_https();
     check_enabled_cookies();
 
+    $success = true;
+    $err_msg = "";
+
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET': {
             redirect_with_message("auth_login.php", "w", "Login action must be with post method.");
@@ -20,14 +23,14 @@
         }
     }
  
-    if ( $username == ""  || $password == "") {
+    if ( $username == ""  || $password == "" ) {
         redirect_with_message("auth_login.php", "w", "Email or password not inserted in login form.");
     }
     else{
         if ( filter_var($username, FILTER_VALIDATE_EMAIL) ) {
             // valid email
-            $username = sanitizeString($username);
-            $password = sanitizeString($password);
+            $username = sanitize_string($username);
+            $password = sanitize_string($password);
 
             $connection = connect_to_database();
 
@@ -38,14 +41,22 @@
 
             try {
                 if (!($result = mysqli_query($connection, $sql_statement)))
-                    throw new Exception("query '" . $sql_statement . "' failed.");
+                    throw new Exception("Problems while authenticating, please try again.");
             } catch (Exception $e) {
-                echo $e->getMessage();
+                $success = false;
+                $err_msg = $e->getMessage();
             }
 
-            $rows = $result->num_rows;
+            if ($result) {
+                $rows = $result->num_rows;
+            }
+
             mysqli_free_result($result);
             mysqli_close($connection);
+
+            if (!$success){
+                redirect_with_message("auth_login.php", "w", $err_msg);
+            }
 
             if ($rows == 1) {
                 session_start();

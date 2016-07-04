@@ -1,6 +1,6 @@
 <?php
 
-    function sanitizeString($var) {
+    function sanitize_string($var) {
         $var = strip_tags($var);
         $var = htmlentities($var);
         $var = stripcslashes($var);
@@ -27,7 +27,7 @@
 
         $connection = connect_to_database();
 
-        $username = sanitizeString($username);
+        $username = sanitize_string($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         $sql_statement = "select * from theater_booked_seat where username != '$username'";
@@ -53,7 +53,7 @@
 
         $connection = connect_to_database();
 
-        $username = sanitizeString($username);
+        $username = sanitize_string($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         $sql_statement = "select * from theater_booked_seat where username = '$username'";
@@ -84,7 +84,7 @@
 
         $connection = connect_to_database();
 
-        $username = sanitizeString($username);
+        $username = sanitize_string($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         try {
@@ -125,7 +125,7 @@
 
         $connection = connect_to_database();
 
-        $username = sanitizeString($username);
+        $username = sanitize_string($username);
         $username = mysqli_real_escape_string($connection, $username);
 
         try {
