@@ -8,22 +8,30 @@
     }
 
     function connect_to_database() {
+        $success = true;
+        $err_msg = "";
+
         $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 
         try{
-            if ( mysqli_connect_error() ) {
-                throw new Exception("Error during connection to DB");
-            }
+            if ( mysqli_connect_error() )
+                throw new Exception("Error during connection to DB.");
         }
         catch(Exception $e){
-            echo $e->getMessage();
+            $success = false;
+            $err_msg = $e->getMessage();
         }
+
+        if ( !$success )
+            redirect_with_message("index.php", "d", $err_msg);
 
         return $connection;
     }
 
-    function get_non_user_taken_seat($username){
+    function get_non_user_taken_seats($username){
         $rows = Array();
+        $success = true;
+        $err_msg = "";
 
         $connection = connect_to_database();
 
@@ -34,10 +42,14 @@
 
         try{
             if ( !($result = mysqli_query($connection, $sql_statement)) )
-                throw new Exception("Query '" . $sql_statement . "' failed.");
+                throw new Exception("Problems while retrieving non user taken seats.");
         }catch (Exception $e){
-            echo $e->getMessage();
+            $success = false;
+            $err_msg = $e->getMessage();
         }
+
+        if ( !$success)
+            redirect_with_message("index.php", "d", $err_msg);
 
         while ($row = mysqli_fetch_assoc($result))
                 $rows[] = $row;
@@ -48,8 +60,10 @@
         return $rows;
     }
 
-    function get_user_taken_seat($username){
+    function get_user_taken_seats($username){
         $rows = Array();
+        $success = true;
+        $err_msg = "";
 
         $connection = connect_to_database();
 
@@ -60,10 +74,14 @@
 
         try{
             if ( !($result = mysqli_query($connection, $sql_statement)) )
-                throw new Exception("Query '" . $sql_statement . "' failed.");
+                throw new Exception("Problems while retrieving user taken seats.");
         }catch(Exception $e){
-            echo $e->getMessage();
+            $success = false;
+            $err_msg = $e->getMessage();
         }
+
+        if ( !$success )
+            redirect_with_message("index.php", "d", $err_msg);
 
         while ($row = mysqli_fetch_assoc($result))
             $rows[] = $row;
@@ -79,7 +97,7 @@
     }
 
     function store_to_book_seats($username, $seats){
-        $completed_transaction = true;
+        $success = true;
         $err_msg = "";
 
         $connection = connect_to_database();
@@ -103,24 +121,25 @@
                 $sql_statement = "insert into theater_booked_seat(cln, rwn, username) values('$col','$row','$username')";
 
                 if (!mysqli_query($connection, $sql_statement))
-                    throw new Exception("Unable to book your selected seats, please try again.");
+                    throw new Exception("Unable to book selected seats, please try again.");
             }
             if (!mysqli_commit($connection))
                 throw new Exception("Commit failed.");
         } catch (Exception $e) {
             mysqli_rollback($connection);
-            $completed_transaction = false;
+            remove_cookie("toBook");
+            $success = false;
             $err_msg = $e->getMessage();
         }
 
         mysqli_close($connection);
 
-        if( !$completed_transaction )
+        if( !$success )
             redirect_with_message("index.php", "d", $err_msg);
     }
 
     function store_to_cancel_seats($username, $seats){
-        $completed_transaction = true;
+        $success = true;
         $err_msg = "";
 
         $connection = connect_to_database();
@@ -143,32 +162,30 @@
 
                 $sql_statement = "delete from theater_booked_seat where cln='$col' and rwn='$row' and username='$username'";
 
-                if (!mysqli_query($connection, $sql_statement)) {
-                    throw new Exception("Unable to release your selected seats, please try again.");
-                }
+                if (!mysqli_query($connection, $sql_statement))
+                    throw new Exception("Unable to release selected seats, please try again.");
             }
-            if ( !mysqli_commit($connection) ){
+            if ( !mysqli_commit($connection) )
                 throw new Exception("Commit failed.");
-            }
         }
         catch (Exception $e){
             mysqli_rollback($connection);
-            $completed_transaction = false;
+            remove_cookie("toCancel");
+            $success = false;
             $err_msg = $e->getMessage();
         }
 
         mysqli_close($connection);
 
-        if( !$completed_transaction ){
+        if( !$success )
             redirect_with_message("index.php", "d", $err_msg);
-        }
     }
 
     function check_and_store_to_book_seats($username){
         if ( isset($_COOKIE['toBook']) ){
             $to_book_seats = json_decode($_COOKIE['toBook'], true);
             store_to_book_seats($username, $to_book_seats);
-            setcookie("toBook", "", time()-60*60);
+            remove_cookie("toBook");
             redirect_with_message("index.php", "s", "Selected seats have been booked.");
         }
     }
@@ -177,7 +194,7 @@
         if ( isset($_COOKIE['toCancel']) ){
             $to_cancel_seats = json_decode($_COOKIE['toCancel'], true);
             store_to_cancel_seats($username, $to_cancel_seats);
-            setcookie("toCancel", "", time()-60*60);
+            remove_cookie("toCancel");
             redirect_with_message("index.php", "s", "Selected booked seats have been canceled.");
         }
     }

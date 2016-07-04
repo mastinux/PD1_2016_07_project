@@ -1,5 +1,5 @@
 <?php
-    //session_start();
+
     $t=time();
     $diff=0;
     $new=false;
@@ -12,7 +12,6 @@
     }
 
     if ($new || ($diff > SESSION_TIMEOUT)) { // new or with inactivity period too long
-        //session_unset(); 	// Deprecated
         $_SESSION=array();
         // If it's desired to kill the session, also delete the session cookie.
         // Note: This will destroy the session, and not just the session data!
@@ -24,8 +23,6 @@
         }
         session_destroy();  // destroy session
         // redirect client to login page
-        //header('HTTP/1.1 307 temporary redirect');
-        //header('Location: auth_login.php');
         redirect_with_message("auth_login.php", "w", "Session time out.");
         exit; // IMPORTANT to avoid further output from the script
     } else {

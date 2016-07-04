@@ -48,98 +48,94 @@
     </noscript>
 
     <?php
-        $non_user_taken_seats = get_non_user_taken_seat($username);
-        $user_taken_seats = get_user_taken_seat($username);
+        $non_user_taken_seats = get_non_user_taken_seats($username);
+        $user_taken_seats = get_user_taken_seats($username);
     ?>
 
     <?php manage_messages(); ?>
 
-    <div class="row col-lg-12">
+    <div class="col-lg-4 col-md-4">
 
-        <div class="col-lg-4 col-md-4">
-
-            <div class="panel panel-default" id="session-details-panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Session details</h3>
-                </div>
-                <div class="panel-body">
-                    <?php
-                        if ( $username ) {
-                            echo "<p>Signed in as <b>".$username."</b></p>                                                                 
-                                  <a href=\"auth_logout.php\">
-                                    <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"clearSelectedSeats()\">
-                                        <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"></span> Logout                                                
-                                    </button>                                                                                                                                                                    
-                                  </a>";
-                        }
-                        else{
-                            echo "<a href=\"auth_login.php\">
-                                    <button type=\"button\" class=\"btn btn-default btn-lg\">
-                                        <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"></span> Login                                                
-                                    </button>                                                                                                                                                                    
-                                  </a>";
-                        }
-                    ?>
-                </div>
+        <div class="panel panel-default" id="session-details-panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Session details</h3>
             </div>
+            <div class="panel-body">
+                <?php
+                    if ( $username ) {
+                        echo "<p>Signed in as <b>".$username."</b></p>                                                                 
+                              <a href=\"auth_logout.php\">
+                                <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"clearSelectedSeats()\">
+                                    <span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"></span> Logout                                                
+                                </button>                                                                                                                                                                    
+                              </a>";
+                    }
+                    else{
+                        echo "<a href=\"auth_login.php\">
+                                <button type=\"button\" class=\"btn btn-default btn-lg\">
+                                    <span class=\"glyphicon glyphicon-log-in\" aria-hidden=\"true\"></span> Login                                                
+                                </button>                                                                                                                                                                    
+                              </a>";
+                    }
+                ?>
+            </div>
+        </div>
 
-            <div class="panel panel-default" id="booking-details-panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Booking details</h3>
-                </div>
-                <div class="panel-body">
-                    Selected seats : <span id="selected-seats" class="label selected visible">0</span><br>
-                    <?
-                        if ($username)
-                            echo "Booked seats : <span id=\"booked-seats\" class=\"label booked visible\">0</span><br>";
+        <div class="panel panel-default" id="booking-details-panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Booking details</h3>
+            </div>
+            <div class="panel-body">
+                Selected seats : <span id="selected-seats" class="label selected visible">0</span><br>
+                <?
+                    if ($username)
+                        echo "Booked seats : <span id=\"booked-seats\" class=\"label booked visible\">0</span><br>";
+                ?>
+                Free seats : <span id="free-seats" class="label free visible"><?php echo ROWS*COLUMNS; ?></span><br>
+                Taken seats : <span id="taken-seats" class="label taken visible">0</span><br>
+                Total seats : <span id="total-seats" class="label label-primary visible"><?php echo ROWS*COLUMNS; ?></span><br><br>
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default btn-lg" onclick="clearSelectedSeats()">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Clear
+                        </button>
+                    </div>
+                    <?php
+                    if ($username) {
+                        echo "<div class=\"btn-group\" role=\"group\">
+                                <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"releaseSelectedSeats()\">
+                                    <span class=\"glyphicon glyphicon-minus\" aria-hidden=\"true\"></span> Release
+                                </button>
+                              </div>";
+                    }
                     ?>
-                    Free seats : <span id="free-seats" class="label free visible"><?php echo ROWS*COLUMNS; ?></span><br>
-                    Taken seats : <span id="taken-seats" class="label taken visible">0</span><br>
-                    Total seats : <span id="total-seats" class="label label-primary visible"><?php echo ROWS*COLUMNS; ?></span><br><br>
-                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-lg" onclick="clearSelectedSeats()">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Clear
-                            </button>
-                        </div>
-                        <?php
-                        if ($username) {
-                            echo "<div class=\"btn-group\" role=\"group\">
-                                    <button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"releaseSelectedSeats()\">
-                                        <span class=\"glyphicon glyphicon-minus\" aria-hidden=\"true\"></span> Release
-                                    </button>
-                                  </div>";
-                        }
-                        ?>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-lg" onclick="bookSelectedSeats()">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Book
-                            </button>
-                        </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default btn-lg" onclick="bookSelectedSeats()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Book
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-8 col-md-8" id="theater-seats-panel">
+    <div class="col-lg-8 col-md-8" id="theater-seats-panel">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Theater seats</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="col-lg-12">
-                        <div id="theater-map"></div>
-                    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Theater seats</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-12">
+                    <div id="theater-map"></div>
                 </div>
             </div>
-
         </div>
 
     </div>
 
     <script type="text/javascript">
-        if (navigator.cookieEnabled  == true) {
+        if (navigator.cookieEnabled == true) {
             var cols = "<?php print(COLUMNS) ?>";
             var rows = "<?php print(ROWS) ?>";
 

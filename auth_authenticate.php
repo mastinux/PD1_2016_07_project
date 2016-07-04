@@ -11,12 +11,12 @@
 
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET': {
-            redirect_with_message("auth_login.php", "w", "Login action must be with post method.");
+            redirect_with_message("auth_login.php", "w", "Login action must be a post method.");
             break;
         }
         case 'POST': {
             if ( !isset($_POST['username']) || !isset($_POST['password']) )
-                redirect_with_message("auth_login.php", "w", "Email or password not set in login form.");
+                redirect_with_message("auth_login.php", "w", "Email or password not inserted in login form.");
             $username = $_POST['username'];
             $password = $_POST['password'];
             break;
@@ -49,14 +49,13 @@
 
             if ($result) {
                 $rows = $result->num_rows;
+                mysqli_free_result($result);
             }
 
-            mysqli_free_result($result);
             mysqli_close($connection);
 
-            if (!$success){
-                redirect_with_message("auth_login.php", "w", $err_msg);
-            }
+            if (!$success)
+                redirect_with_message("auth_login.php", "d", $err_msg);
 
             if ($rows == 1) {
                 session_start();
@@ -65,7 +64,8 @@
                 check_and_store_to_book_seats($username);
                 check_and_store_to_cancel_seats($username);
                 redirect_with_message("index.php", "s", "Logged in as " . $username . ".");
-            } else {
+            }
+            else {
                 redirect_with_message("auth_login.php", "d", "Invalid username or password inserted in login form.");
             }
         }

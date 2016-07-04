@@ -6,9 +6,12 @@
     set_https();
     check_enabled_cookies();
 
+    $success = true;
+    $err_msg = "";
+
     switch($_SERVER['REQUEST_METHOD']) {
         case 'GET': {
-            redirect_with_message("auth_login.php", "w", "Register action must be with post method.");
+            redirect_with_message("auth_login.php", "w", "Register action must be a post method.");
             break;
         }
         case 'POST':{
@@ -37,16 +40,20 @@
 
             try{
                 if ( !($result = mysqli_query($connection, $sql_statement)) )
-                    throw new Exception("query '" . $sql_statement . "' failed.");
+                    throw new Exception("Problems while checking new user, please register again.");
             }catch (Exception $e){
-                echo $e->getMessage();
+                $success = false;
+                $err_msg = $e->getMessage();
             }
 
             $rows = $result->num_rows;
             mysqli_free_result($result);
-            $connection->close();
+            mysqli_close($connection);
 
-            if ( $rows == 1)
+            if ( !$success )
+                redirect_with_message("auth_login.php", "d", $err_msg);
+
+            if ( $rows == 1 )
                 redirect_with_message("auth_login.php", "w", "Email already used.");
 
             if ( strcmp($password, $password_repeated) == 0){
@@ -63,12 +70,16 @@
 
                 try{
                     if ( !mysqli_query($connection, $sql_statement) )
-                        throw new Exception("query '" . $sql_statement . "' failed.");
+                        throw new Exception("Problems while registering new user, please register again.");
                 }catch (Exception $e){
-                    echo $e->getMessage();
+                    $success = false;
+                    $err_msg = $e->getMessage();
                 }
 
                 mysqli_close($connection);
+
+                if ( !$success )
+                    redirect_with_message("auth_login.php", "d", $err_msg);
 
                 session_start();
                 $_SESSION['231826_user'] = $email;
